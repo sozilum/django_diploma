@@ -16,8 +16,9 @@ from .models import (Product,
 class ProductAdmin(admin.ModelAdmin):
 
     list_display = [
-        'name',
+        'title',
         'image',
+        'full_description',
         'description',
         'price',
         'review',
@@ -34,8 +35,8 @@ class ReviewAdmin(admin.ModelAdmin):
     list_display = [
         'author',
         'points',
-        'title',
-        'review',
+        'email',
+        'text',
         'date',
     ]
 
@@ -57,7 +58,9 @@ class OrderAdmin(admin.ModelAdmin):
         'delivery_address',
         'delivery_type',
         'payment',
-        'date'
+        'date',
+        'in_order',
+        'free_delivery',
     ]
 
 @admin.register(Tags)
@@ -72,7 +75,7 @@ class TagsAdmin(admin.ModelAdmin):
 class CategoriesAdmin(admin.ModelAdmin):
 
     list_display = [
-        'name',
+        'title',
     ]
 
 

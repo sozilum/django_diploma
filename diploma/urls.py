@@ -22,7 +22,9 @@ from django.urls import (path,
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', include("frontend.urls")),
     path('api/',include('main_app.urls')),
+    path('api/', include('auth_app.urls')),
+
+    path('', include("frontend.urls")),
 
 ]

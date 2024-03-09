@@ -13,9 +13,10 @@ class ProductSerializer(serializers.ModelSerializer):
     class Meta:
         model = Product
         fields = [
-            'name',
+            'title',
             'image',
             'description',
+            'full_description',
             'price',
             'review',
             'date',
@@ -33,6 +34,7 @@ class OrderSerializer(serializers.ModelSerializer):
             'delivery_type',
             'payment',
             'date',
+            'free_delivery',
         ]
 
 class ReviewSerializer(serializers.ModelSerializer):
@@ -40,9 +42,10 @@ class ReviewSerializer(serializers.ModelSerializer):
         model = Review
         fields = [
             'author',
+            'email',
             'points',
             'title',
-            'review',
+            'text',
             'date',
         ]
 
@@ -67,7 +70,7 @@ class CategoriesSerializer(serializers.ModelSerializer):
     class Meta:
         model = Categories
         fields = [
-            'name',
+            'title',
         ]
 
 class DeliveryTypeSerializer(serializers.ModelSerializer):

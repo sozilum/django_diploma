@@ -1,18 +1,24 @@
-from django.urls import (path,
-                        include,
-                        )
-from django.contrib.auth.views import (LogoutView,
-                                       LoginView,
-                                       )
-
-from rest_framework.routers import BaseRouter
+from rest_framework.routers import SimpleRouter
+from .views import (SignUpView,
+                    # SignInView,
+                    # LogoutView,
+                    )
 
 
-# urlpatterns = [
-#     path('',
-#         include(router.urls),
-#         )
-# ]
+router = SimpleRouter()
+router.register(r'sign-up',
+                SignUpView,
+                basename='sing-up',
+                )
+urlpatterns = router.urls
+# router.register(r'sign-in',
+#                 SignInView,
+#                 basename = 'login',
+#                 )
+# router.register(r'logout',
+#                 LogoutView,
+#                 basename = 'exit',
+#                 )
 
-#sign-in - вход
-#sign-up - регистрация
+
+#Где-то здесь или во view ошибка, найти

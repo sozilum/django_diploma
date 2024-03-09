@@ -4,10 +4,10 @@ from .views import (ProductView,
                     BasketView,
                     )
 
-from rest_framework.routers import DefaultRouter
+from rest_framework.routers import SimpleRouter
 
 
-router = DefaultRouter()
+router = SimpleRouter()
 router.register(r'catalog',
                 ProductView,
                 )
@@ -18,7 +18,7 @@ router.register(r'tags',
                 TagsView,
                 )
 router.register(r'basket',
-                BasketView)
+                BasketView,
+                )
 
 urlpatterns = router.urls
-
