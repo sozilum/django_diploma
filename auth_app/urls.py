@@ -1,24 +1,17 @@
-from rest_framework.routers import SimpleRouter
-from .views import (SignUpView,
-                    # SignInView,
-                    # LogoutView,
+from .views import (AccountView,
+                    ProfileView,
                     )
 
-
-router = SimpleRouter()
-router.register(r'sign-up',
-                SignUpView,
-                basename='sing-up',
-                )
-urlpatterns = router.urls
-# router.register(r'sign-in',
-#                 SignInView,
-#                 basename = 'login',
-#                 )
-# router.register(r'logout',
-#                 LogoutView,
-#                 basename = 'exit',
-#                 )
+from django.urls import path
 
 
-#Где-то здесь или во view ошибка, найти
+urlpatterns = [
+    path('sing-in/', AccountView.post_login, name = 'log-in'),
+    path('sign-up/', AccountView.post_register, name = 'register'),
+    path('sign-out/', AccountView.post_logout, name = 'logout'),
+    
+    path('profile/', ProfileView.get_profile, name = 'profile'),
+    path('profile/password/', ProfileView.update_password, name = 'update_password'),
+
+
+]

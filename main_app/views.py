@@ -1,9 +1,7 @@
-from rest_framework import viewsets
-from rest_framework.permissions import IsAuthenticatedOrReadOnly
-from rest_framework.decorators import action
-from rest_framework.response import Response
-from rest_framework.request import Request
-
+from rest_framework.views import APIView
+from django.http import (HttpResponse,
+                         JsonResponse,
+                         )
 from .models import (Product,
                      Categories,
                      Tags,
@@ -17,18 +15,54 @@ from .serializer import (ProductSerializer,
                          )
 
 
-class ProductView(viewsets.ReadOnlyModelViewSet):
-        queryset = Product.objects.all()
-        serializer_class = ProductSerializer
+class ProductView(APIView):
+    def get_categories(self):
+        pass
+     
+    def get_catalog(self):
+        pass
 
-class CategoriesView(viewsets.ModelViewSet):
-    serializer_class = CategoriesSerializer
-    queryset = Categories.objects.all()
+    def get_products_popular(self):
+        pass
 
-class TagsView(viewsets.ModelViewSet):
-    queryset = Tags.objects.all()
-    serializer_class = TagsSerializer
+    def get_products_limited(self):
+        pass
 
-class BasketView(viewsets.ModelViewSet):
-    queryset = Order.objects.all()
-    serializer_class = OrderSerializer
+    def get_sales(self):
+        pass
+
+    def get_banner(self):
+        pass
+
+    def get_tags(self):
+        queryset = Tags.objects.all()
+        tags_serializer = TagsSerializer(queryset)
+        print(tags_serializer.data)
+        return JsonResponse(tags_serializer.data,
+                            safe = False,
+                            )
+
+
+class BasketView(APIView):
+    def get_basket(self):
+        pass
+
+    def post_basket(self):
+        pass
+
+    def delete_basket(self):
+        pass
+
+
+class OrderView(APIView):
+    def get_order(self):
+        pass
+
+    def post_order(self):
+        pass
+
+    def get_user_order(self):
+        pass
+
+    def post_user_order(self):
+        pass

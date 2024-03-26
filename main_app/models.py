@@ -36,7 +36,7 @@ class Categories(models.Model):
     title = models.CharField(max_length = 50)
 
     def __str__(self) -> str:
-        return self.name
+        return self.title
 
 class Tags(models.Model):
     name = models.CharField(max_length = 50)
@@ -80,7 +80,7 @@ class Product(models.Model):
     available = models.BooleanField(default = True)
 
     def __str__(self) -> str:
-        return self.name
+        return self.title
     
 
 class Review(models.Model):

@@ -20,7 +20,7 @@ class Profile(models.Model):
                                blank = True,
                                upload_to = profile_image_downloader,
                                )
-    name = models.CharField(max_length = 100, 
+    fullName = models.CharField(max_length = 100, 
                                   db_index = True,
                                   )
     phone = models.CharField(max_length = 11,
@@ -31,4 +31,4 @@ class Profile(models.Model):
                             )
     
     def __str__(self) -> str:
-        return self.name
+        return self.fullName
