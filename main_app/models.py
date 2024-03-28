@@ -20,11 +20,19 @@ def user_email(self):
     return self.user.email
 
 
+class Categories(models.Model):
+    title = models.CharField(max_length = 50)
+
+    def __str__(self) -> str:
+        return self.title
+
+
 class Payment(models.Model):
     name = models.CharField(max_length = 50)
 
     def __str__(self) -> str:
         return self.name
+
 
 class DeliveryType(models.Model):
     name = models.CharField(max_length = 50)
@@ -32,11 +40,6 @@ class DeliveryType(models.Model):
     def __str__(self) -> str:
         return self.name
 
-class Categories(models.Model):
-    title = models.CharField(max_length = 50)
-
-    def __str__(self) -> str:
-        return self.title
 
 class Tags(models.Model):
     name = models.CharField(max_length = 50)

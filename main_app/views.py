@@ -17,7 +17,11 @@ from .serializer import (ProductSerializer,
 
 class ProductView(APIView):
     def get_categories(self):
-        pass
+        queryset = Categories.objects.all()
+        serialized_data = CategoriesSerializer(queryset)
+        return JsonResponse(data = serialized_data.data,
+                            safe = False,
+                            )
      
     def get_catalog(self):
         pass
@@ -35,12 +39,7 @@ class ProductView(APIView):
         pass
 
     def get_tags(self):
-        queryset = Tags.objects.all()
-        tags_serializer = TagsSerializer(queryset)
-        print(tags_serializer.data)
-        return JsonResponse(tags_serializer.data,
-                            safe = False,
-                            )
+        pass
 
 
 class BasketView(APIView):
@@ -65,4 +64,9 @@ class OrderView(APIView):
         pass
 
     def post_user_order(self):
+        pass
+
+
+class PaymentView(APIView):
+    def get_payment(self):
         pass

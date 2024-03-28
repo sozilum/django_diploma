@@ -78,8 +78,3 @@ class ProfileView(APIView):
     def update_avatar(self):
         self.FILES['avatar']
         return HttpResponse(status = 200)
-    
-
-class PaymentView(APIView):
-    def get_payment(self):
-        pass

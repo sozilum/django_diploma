@@ -8,7 +8,6 @@ def profile_image_downloader(instance:'Profile', filename: str) -> str:
                                                     )
 
 
-#Описание модели пользователя
 class Profile(models.Model):
     class Meta:
         pass

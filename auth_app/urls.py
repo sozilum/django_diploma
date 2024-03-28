@@ -11,7 +11,7 @@ urlpatterns = [
     path('sign-out/', AccountView.post_logout, name = 'logout'),
     
     path('profile/', ProfileView.get_profile, name = 'profile'),
+    path('profile/', ProfileView.post_profile, name = 'update_profile'),
     path('profile/password/', ProfileView.update_password, name = 'update_password'),
-
-
+    path('profile/avatar/', ProfileView.update_avatar, name = 'avatar'),
 ]
