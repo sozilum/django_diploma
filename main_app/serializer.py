@@ -70,7 +70,9 @@ class CategoriesSerializer(serializers.ModelSerializer):
     class Meta:
         model = Categories
         fields = [
+            'id',
             'title',
+            'image',
         ]
 
 class DeliveryTypeSerializer(serializers.ModelSerializer):

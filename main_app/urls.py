@@ -6,5 +6,5 @@ from django.urls import path
 
 urlpatterns = [
     path('categories/', ProductView.get_categories, name = 'categories'),
-    path('tags/', ProductView.get_tags, name = 'tags'),
+    # path('tags/', ProductView.get_tags, name = 'tags'),
 ]

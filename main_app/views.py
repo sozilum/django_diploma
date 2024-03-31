@@ -18,11 +18,13 @@ from .serializer import (ProductSerializer,
 class ProductView(APIView):
     def get_categories(self):
         queryset = Categories.objects.all()
+        print(queryset)
         serialized_data = CategoriesSerializer(queryset)
+        print(serialized_data)
         return JsonResponse(data = serialized_data.data,
                             safe = False,
                             )
-     
+
     def get_catalog(self):
         pass
 

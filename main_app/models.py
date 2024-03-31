@@ -19,9 +19,17 @@ def order_free_delivery(self):
 def user_email(self):
     return self.user.email
 
+def image_upload_categories(instance:'Categories', filename:str) -> str:
+    return 'categories/category_{pk}/{filename}'.format(pk = instance.pk,
+                                                        filename = filename
+                                                        )
+
 
 class Categories(models.Model):
     title = models.CharField(max_length = 50)
+    image = models.ImageField(upload_to = image_upload_categories,
+                              null = True,
+                              )
 
     def __str__(self) -> str:
         return self.title
