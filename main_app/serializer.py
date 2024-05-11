@@ -6,36 +6,91 @@ from .models import (Product,
                     Tags,
                     Categories,
                     DeliveryType,
+                    Basket,
                     )
+
+
+class BannerSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Product
+        fields = [
+            'id',
+            'category',
+            'price',
+            'count',
+            'date',
+            'title',
+            'description',
+            'freeDelivery',
+            'images',
+            'tags',
+            'reviews',
+            'rating',
+
+        ]
+
+
+class CategoriesSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Categories
+        fields = [
+            'id',
+            'title',
+            'image',
+        ]
 
 
 class ProductSerializer(serializers.ModelSerializer):
     class Meta:
         model = Product
         fields = [
-            'title',
-            'image',
-            'description',
-            'full_description',
+            'id',
+            'category',
             'price',
-            'review',
+            'count',
             'date',
+            'title',
+            'description',
+            'fullDescription',
+            'freeDelivery',
+            'images',
             'tags',
-            'categories',
+            'reviews',
+            'category',
         ]
+
+
+class SalesSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Product
+        fields = [
+            'id',
+            'price',
+            'salePrice',
+            'dateFrom',
+            'dateTo',
+            'title',
+            'images',
+        ]
+
 
 class OrderSerializer(serializers.ModelSerializer):
     class Meta:
         model = Order
         fields = [
-            'author',
+            'fullName',
+            'email',
+            'phone',
+            'paymentType',
+            'totalCost',
+            'city',
             'products',
-            'delivery_address',
-            'delivery_type',
-            'payment',
-            'date',
-            'free_delivery',
+            'address',
+            'deliveryType',
+            'createdAt',
+            'status',
         ]
+
 
 class ReviewSerializer(serializers.ModelSerializer):
     class Meta:
@@ -66,18 +121,20 @@ class TagsSerializer(serializers.ModelSerializer):
         ]
 
 
-class CategoriesSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Categories
-        fields = [
-            'id',
-            'title',
-            'image',
-        ]
 
 class DeliveryTypeSerializer(serializers.ModelSerializer):
     class Meta:
         model = DeliveryType
         fields = [
             'name',
+        ]
+
+
+class BasketSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Basket
+        fields = [
+            'user',
+            'products',
+            'count',
         ]

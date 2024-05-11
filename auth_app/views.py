@@ -16,7 +16,7 @@ from .serializers import ProfileSerializer
 import json
 
 
-class AccountView(APIView):
+class LoginView(APIView):
     def post_login(self):
         body = json.loads(self.body)
         username = body['username']
@@ -35,7 +35,7 @@ class AccountView(APIView):
         else:
             return HttpResponse(status = 500)
 
-
+class RegisterView(APIView):
     def post_register(self):
         body = json.loads(self.body)
         user = User.objects.create_user(fullName = body['name'],
@@ -46,6 +46,7 @@ class AccountView(APIView):
         return HttpResponse(status = 200)
 
 
+class LogoutView(APIView):
     def post_logout(self):
         logout(self)
         return HttpResponse(status = 200)
@@ -57,7 +58,7 @@ class ProfileView(APIView):
         profile_serializer = ProfileSerializer(user)
         return JsonResponse(profile_serializer.data)
     
-
+class UpdateProfileView(APIView):
     def post_profile(self):
         body = json.loads(self.body)
         user = Profile.objects.get(user_id = self.user.pk)
@@ -71,10 +72,11 @@ class ProfileView(APIView):
         return HttpResponse(status = 200)
 
 
+class UpdatePasswordView(APIView):
     def update_password(self):
         return HttpResponse(status = 200)
 
-
+class UpdateAvatarView(APIView):
     def update_avatar(self):
         self.FILES['avatar']
         return HttpResponse(status = 200)

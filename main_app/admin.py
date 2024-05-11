@@ -7,6 +7,7 @@ from .models import (Product,
                      Tags,
                      Categories,
                      DeliveryType,
+                     Basket,
                      )
 
 
@@ -17,15 +18,21 @@ class ProductAdmin(admin.ModelAdmin):
 
     list_display = [
         'title',
-        'image',
-        'full_description',
+        'images',
         'description',
+        'fullDescription',
         'price',
-        'review',
         'producer',
         'date',
         'tags',
-        'categories',
+        'category',
+        'freeDelivery',
+        'dateFrom',
+        'dateTo',
+        'count',
+        'available',
+        'reviews',
+        'rating',
     ]
 
 
@@ -34,8 +41,8 @@ class ReviewAdmin(admin.ModelAdmin):
 
     list_display = [
         'author',
-        'points',
         'email',
+        'points',
         'text',
         'date',
     ]
@@ -53,14 +60,17 @@ class PaymetAdmin(admin.ModelAdmin):
 class OrderAdmin(admin.ModelAdmin):
 
     list_display = [
-        'author',
+        'fullName',
+        'email',
+        'phone',
+        'paymentType',
+        'totalCost',
+        'city',
         'products',
-        'delivery_address',
-        'delivery_type',
-        'payment',
-        'date',
-        'in_order',
-        'free_delivery',
+        'address',
+        'deliveryType',
+        'createdAt',
+        'status',
     ]
 
 @admin.register(Tags)
@@ -84,4 +94,12 @@ class DeliveryTypeAdmin(admin.ModelAdmin):
 
     list_display = [
         'name',
+    ]
+
+@admin.register(Basket)
+class BasketAdmin(admin.ModelAdmin):
+
+    list_display = [
+        'user',
+        'products',
     ]
