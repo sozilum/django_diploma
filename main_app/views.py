@@ -254,7 +254,7 @@ class TagsView(APIView):
                             )
 
 class BasketView(APIView):
-    def get_basket(self):
+    def get(self):
         queryset = Basket.objects.filter(user_id = self.user.id)
         data_serializer = BasketSerializer(queryset,
                                            many = True,
@@ -295,21 +295,30 @@ class BasketView(APIView):
                             safe = False,
                             )
     
-
-class UpdateBasketView(APIView):
-    def post_basket(self):
-
-        print('It works, POST')
-
+    def post(self):
+        print('works, post?')
         return HttpResponse(status = 200)
     
 
-class DeleteBasketView(APIView):
-    def delete_basket(self):
-        
-        print('It works, DELETE')
-
+    def delete(self):
+        print('works, delete?')
         return HttpResponse(status = 200)
+    
+
+# class UpdateBasketView(APIView):
+#     def post_basket(self):
+
+#         print('It works, POST')
+
+#         return HttpResponse(status = 200)
+    
+
+# class DeleteBasketView(APIView):
+#     def delete_basket(self):
+        
+#         print('It works, DELETE')
+
+#         return HttpResponse(status = 200)
 
 class OrderView(APIView):
     def get_order(self):
