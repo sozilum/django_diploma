@@ -2,6 +2,8 @@ from django.contrib.auth.models import User
 from django.core.validators import MaxValueValidator
 from django.db import models
 
+#Сделать отдельный класс для rating через foreight key в модели продукта, затем получать через query все значения рейтинга...
+
 def image_upload(instance:'Product', filename: str) -> str:
     return 'products/product_{pk}/{filename}'.format(pk = instance.pk,
                                                     filename = filename,
@@ -180,9 +182,9 @@ class Basket(models.Model):
             'products',
         ]
     
-    user = models.OneToOneField(User,
-                                on_delete = models.CASCADE,
-                                )
+    user = models.ForeignKey(User,
+                             on_delete = models.CASCADE,
+                             )
     products = models.ForeignKey(Product,
                                  on_delete = models.CASCADE,
                                  null = True,
