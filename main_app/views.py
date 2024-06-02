@@ -1,5 +1,5 @@
 from rest_framework.views import APIView
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticated, AllowAny
 
 from django.http import (HttpResponse,
                          JsonResponse,
@@ -11,8 +11,7 @@ from .models import (Product,
                      Basket,
                      )
 
-from .serializer import (BannerSerializer,
-                         CategoriesSerializer,
+from .serializer import (CategoriesSerializer,
                          ProductSerializer,
                          SalesSerializer,
                          TagsSerializer,
@@ -20,101 +19,97 @@ from .serializer import (BannerSerializer,
                          BasketSerializer,
                          )
 
-from .crutch import (product_crutch,
-                     banner_crutch,
-                     categories_crutch,
-                     sales_crutch,
-                     order_crutch,
+from .crutch import (order_crutch,
                      user_product_crutch,
+                     categories_crutch,
                      )
 
 import json
 
 
 class BannerView(APIView):
-    def get_banner(self):
-        queryset = Product.objects.all()[:1:]
-        serializer_data = BannerSerializer(queryset,
-                                           many = True,
-                                           )
-        
-        data = banner_crutch(serializer_data.data[0])
+    permission_classes = [AllowAny]
 
-        return JsonResponse(data = data,
+    def get(self, request):
+        queryset = Product.objects.all()
+        serializer_data = ProductSerializer(queryset,
+                                            many = True,
+                                            )
+        return JsonResponse(data = serializer_data.data,
                             safe = False,
                             )
 
 
 class CategoriesView(APIView):
-    def get_categories(self):
+    permission_classes = [AllowAny]
+
+    def get(self, request):
         queryset = Categories.objects.all()
         serialized_data = CategoriesSerializer(queryset,
                                                many = True,
                                                )
-        
         data = categories_crutch(serialized_data.data)
-
         return JsonResponse(data = data,
                             safe = False,
                             )
 
 class CatalogView(APIView):
-    def get_catalog(self):
+    permission_classes = [AllowAny]
+
+    def get(self, request):
         queryset = Product.objects.all()
         data_serializer = ProductSerializer(queryset,
                                             many = True,
                                             )
-
-        data = product_crutch(data_serializer.data)
-
-        return JsonResponse(data = data,
+        return JsonResponse(data = data_serializer.data,
                             safe = False,
                             )
 
+
 class PopularProductView(APIView):
-    def get_products_popular(self):
+    permission_classes = [AllowAny]
+
+    def get(self, request):
         queryset = Product.objects.all()
         data_serializer = ProductSerializer(queryset,
                                             many = True,
                                             )
-        
-        data = product_crutch(data_serializer.data)
-
-        return JsonResponse(data = data,
+        return JsonResponse(data = data_serializer.data,
                             safe = False,
                             )
 
 
 class LimitedProductView(APIView):
-    def get_products_limited(self):
+    permission_classes = [AllowAny]
+
+    def get(self, request):
         queryset = Product.objects.all()
         data_serializer = ProductSerializer(queryset,
                                             many = True,
                                             )
-        
-        data = product_crutch(data_serializer.data)
-
-        return JsonResponse(data = data, 
+        return JsonResponse(data = data_serializer.data,
                             safe=False,
                             )
     
 
 class SalesProductView(APIView):
-    def get_sales(self):
+    permission_classes = [AllowAny]
+
+    def get(self, request):
         queryset = Product.objects.all()
         data_serializer = SalesSerializer(queryset,
                                           many = True,
                                           )
-        
-        data = sales_crutch(data_serializer.data)
-
-        return JsonResponse(data = data,
+        print('its doesnt work, correctly')
+        return JsonResponse(data = data_serializer.data,
                             safe = False,
                             )
 
 
 class TagsView(APIView):
-    def get_tags(self):
+    permission_classes = [AllowAny]
+    
+    def get(self, request):
         queryset = Tags.objects.all()
         data_serializer = TagsSerializer(queryset,
                                          many = True,
@@ -122,6 +117,7 @@ class TagsView(APIView):
         return JsonResponse(data = data_serializer.data,
                             safe = False,
                             )
+
 
 class BasketView(APIView):
     permission_classes = [IsAuthenticated]
@@ -134,35 +130,26 @@ class BasketView(APIView):
                                            )
         
         new_list = []
-        for index in range(len(data_serializer.data)):
-
-            basket_data = data_serializer.data[index]
-            
-            product_queryset = Product.objects.filter(id = basket_data['products'])
-            product_serializer = ProductSerializer(product_queryset,
-                                                   many = True,
-                                                   )
-            data = product_serializer.data[0]
-            
+        for data in data_serializer.data:
             new_list.append(
                 {
-                    'id':data['id'],
-                    'category':data['category'],
-                    'price':data['price'],
-                    'count':basket_data['count'],
-                    'date':data['date'],
-                    'title':data['title'],
-                    'description':data['description'],
-                    'freeDelivery':data['freeDelivery'],
+                    'id':data['products']['id'],
+                    'category':data['products']['category'],
+                    'price':data['products']['price'],
+                    'count':data['count'],
+                    'date':data['products']['date'],
+                    'title':data['products']['title'],
+                    'description':data['products']['description'],
+                    'freeDelivery':data['products']['freeDelivery'],
                     'images':[
                         {
-                            'src':data['images'],
-                            'alt':'',
+                            'src':data['products']['images']['src'],
+                            'alt':data['products']['images']['alt'],
                             }
                         ],
-                    'tags':data['tags'],
-                    'reviews':data['reviews'],
-                    # 'rating':data['rating'],
+                    'tags':data['products']['tags'],
+                    'reviews':data['products']['reviews'],
+                    # 'rating':data['products']['rating'],
                 }
             )
         return JsonResponse(data = new_list,
@@ -191,7 +178,7 @@ class BasketView(APIView):
             num = serializer_data.data[0]['count'] - body['count']
             queryset.update(count = num)
         
-        return JsonResponse()
+        return HttpResponse(status = 200)
 
 
 class OrderView(APIView):
@@ -230,6 +217,8 @@ class UserOrderView(APIView):
 
 
 class PaymentView(APIView):
-    def get_payment(self):
+    permission_classes = [IsAuthenticated]
+
+    def get(self):
         ...
         return HttpResponse(status = 200)

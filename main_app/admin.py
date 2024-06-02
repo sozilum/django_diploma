@@ -8,9 +8,48 @@ from .models import (Product,
                      Categories,
                      DeliveryType,
                      Basket,
+                     Productavatar,
+                     Categoriesavatar,
+                     Subcategoriesavatar,
+                     Subcategories,
                      )
 
 
+@admin.register(Subcategories)
+class SubcategoriesAdmin(admin.ModelAdmin):
+
+    list_display = [
+        'title',
+        'image',
+
+    ]
+
+
+@admin.register(Subcategoriesavatar)
+class Subcategoriesavatar(admin.ModelAdmin):
+
+    list_display = [
+        'src',
+        'alt',
+    ]
+
+
+@admin.register(Categoriesavatar)
+class CategoriesavatarAdmin(admin.ModelAdmin):
+
+    list_display = [
+        'src',
+        'alt',
+    ]
+
+
+@admin.register(Productavatar)
+class ProductavatarAdmin(admin.ModelAdmin):
+
+    list_display = [
+        'src',
+        'alt',
+    ]
 
 
 @admin.register(Product)
@@ -86,6 +125,8 @@ class CategoriesAdmin(admin.ModelAdmin):
 
     list_display = [
         'title',
+        'image',
+        'subcategories',
     ]
 
 

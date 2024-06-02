@@ -7,40 +7,95 @@ from .models import (Product,
                     Categories,
                     DeliveryType,
                     Basket,
+                    Subcategories,
+                    Productavatar,
+                    Categoriesavatar,
+                    Subcategoriesavatar,
                     )
 
 
-class BannerSerializer(serializers.ModelSerializer):
+class ReviewSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Product
+        model = Review
         fields = [
-            'id',
-            'category',
-            'price',
-            'count',
-            'date',
+            'author',
+            'email',
+            'points',
             'title',
-            'description',
-            'freeDelivery',
-            'images',
-            'tags',
-            'reviews',
-            'rating',
-
+            'text',
+            'date',
         ]
 
 
-class CategoriesSerializer(serializers.ModelSerializer):
+class SubcategoriesavatarSerializer(serializers.ModelSerializer):
+    src = serializers.SerializerMethodField()
+
     class Meta:
-        model = Categories
+        model = Subcategoriesavatar
+        fields = [
+            'src',
+            'alt',
+        ]
+
+    def get_src(self, obj):
+        return obj.src.url
+
+class CategoriesavatarSerializer(serializers.ModelSerializer):
+    src = serializers.SerializerMethodField()
+
+    class Meta:
+        model = Categoriesavatar
+        fields = [
+            'src',
+            'alt',
+        ]
+
+    def get_src(self, obj):
+        return obj.src.url
+
+class ProductavatarSerializer(serializers.ModelSerializer):
+    src = serializers.SerializerMethodField()
+
+    class Meta:
+        model = Productavatar
+        fields = [
+            'src',
+            'alt',
+        ]
+
+    def get_src(self, obj):
+        return obj.src.url
+
+
+class SubcategoriesSerializer(serializers.ModelSerializer):
+    image = SubcategoriesavatarSerializer()
+
+    class Meta:
+        model = Subcategories
         fields = [
             'id',
             'title',
             'image',
         ]
 
+class CategoriesSerializer(serializers.ModelSerializer):
+    subcategories = SubcategoriesSerializer()
+    image = CategoriesavatarSerializer()
+    
+    class Meta:
+        model = Categories
+        fields = [
+            'id',
+            'title',
+            'image',
+            'subcategories',
+        ]
+
 
 class ProductSerializer(serializers.ModelSerializer):
+    images = ProductavatarSerializer()
+    reviews = ReviewSerializer()
+    
     class Meta:
         model = Product
         fields = [
@@ -56,7 +111,9 @@ class ProductSerializer(serializers.ModelSerializer):
             'images',
             'tags',
             'reviews',
+            'specifications',
             'category',
+            'rating',
         ]
 
 
@@ -92,19 +149,6 @@ class OrderSerializer(serializers.ModelSerializer):
         ]
 
 
-class ReviewSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Review
-        fields = [
-            'author',
-            'email',
-            'points',
-            'title',
-            'text',
-            'date',
-        ]
-
-
 class PaymentmethodSerializer(serializers.ModelSerializer):
     class Meta:
         model = Payment
@@ -131,6 +175,8 @@ class DeliveryTypeSerializer(serializers.ModelSerializer):
 
 
 class BasketSerializer(serializers.ModelSerializer):
+    products = ProductSerializer()
+
     class Meta:
         model = Basket
         fields = [

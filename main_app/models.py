@@ -2,12 +2,24 @@ from django.contrib.auth.models import User
 from django.core.validators import MaxValueValidator
 from django.db import models
 
-#Сделать отдельный класс для rating через foreight key в модели продукта, затем получать через query все значения рейтинга...
+
 
 def image_upload(instance:'Product', filename: str) -> str:
-    return 'products/product_{pk}/{filename}'.format(pk = instance.pk,
+    return 'product/product_{pk}/{filename}'.format(pk = instance.pk,
                                                     filename = filename,
                                                     )
+
+def image_upload_categories(instance:'Categories', filename:str) -> str:
+    return 'categories/category_{pk}/{filename}'.format(pk = instance.pk,
+                                                        filename = filename,
+                                                        )
+
+def image_upload_subcategories(instance:'Subcategories', filename:str) -> str:
+    return 'subcategories/subcategory_{pk}/{filename}'.format(pk = instance.pk,
+                                                               filename = filename,
+                                                               )
+
+# Бесполезный кусок кода...
 def order_free_delivery(self):
     price = 0
     for product in self.products:
@@ -19,14 +31,13 @@ def order_free_delivery(self):
     else:
         return False
 
-def user_email(self):
-    return self.user.email
-
-def user_phone(self):
-    return self.user.phone
-
-def user_fullname(self):
-    return self.user.fullName
+def avg_rating(self):
+    if self.reviews.points:
+        return [index for index in self.reviews.points] // len(self.reviews.points)
+    
+    else:
+        return 0
+#   
 
 def total_cost(self):
     cost = int()
@@ -38,24 +49,67 @@ def total_cost(self):
     
     return cost
 
-def image_upload_categories(instance:'Categories', filename:str) -> str:
-    return 'categories/category_{pk}/{filename}'.format(pk = instance.pk,
-                                                        filename = filename
-                                                        )
 
-def avg_rating(self):
-    if self.reviews.points:
-        return [index for index in self.reviews.points] // len(self.reviews.points)
+def user_email(self):
+    return self.user.email
+
+def user_phone(self):
+    return self.user.phone
+
+def user_fullname(self):
+    return self.user.fullName
+
+
+
+class Subcategoriesavatar(models.Model):
+    src = models.ImageField(upload_to = image_upload_subcategories,
+                            null = True,
+                            )
+    alt = models.CharField(max_length = 50)
+
+    def __str__(self) -> str:
+        return self.alt
+
+class Categoriesavatar(models.Model):
+    src = models.ImageField(upload_to = image_upload_categories,
+                            null = True,
+                            )
+    alt = models.CharField(max_length = 50)
+
+    def __str__(self) -> str:
+        return self.alt
+
+class Productavatar(models.Model):
+    src = models.ImageField(upload_to = image_upload,
+                            null = True,
+                            )
+    alt = models.CharField(max_length = 50)
+
+    def __str__(self) -> str:
+        return self.alt
     
-    else:
-        return 0
 
+class Subcategories(models.Model):
+    title = models.CharField(max_length = 50)
+    image = models.ForeignKey(Subcategoriesavatar,
+                              on_delete = models.CASCADE,
+                              null = True,
+                              )
+    
+    def __str__(self) -> str:
+        return self.title
 
 class Categories(models.Model):
     title = models.CharField(max_length = 50)
-    image = models.ImageField(upload_to = image_upload_categories,
+    image = models.ForeignKey(Categoriesavatar,
+                              on_delete = models.CASCADE,
                               null = True,
                               )
+    subcategories = models.ForeignKey(Subcategories,
+                                      on_delete = models.CASCADE,
+                                      null = True,
+                                      blank = True,
+                                      )
 
     def __str__(self) -> str:
         return self.title
@@ -96,9 +150,11 @@ class DeliveryType(models.Model):
     def __str__(self) -> str:
         return self.name
 
+
 class Specifications(models.Model):
     name = models.CharField(max_length = 50)
     value = models.TextField()
+
 
 class Tags(models.Model):
     name = models.CharField(max_length = 50)
@@ -116,9 +172,10 @@ class Product(models.Model):
         ]
 
     title = models.CharField(max_length = 100)
-    images = models.ImageField(upload_to = image_upload,
-                              null = True,
-                              )
+    images = models.ForeignKey(Productavatar,
+                               on_delete = models.CASCADE,
+                               null = True,
+                               )
     description = models.CharField(max_length = 100,
                                    null = True,
                                    )
@@ -168,10 +225,8 @@ class Product(models.Model):
                                 null = True,
                                 blank = True,
                                 )
-    rating = models.TextField(avg_rating,
-                              null = True,
-                              blank = True,
-                              )
+    rating = models.TextField(null = True)
+    
     def __str__(self) -> str:
         return self.title
 

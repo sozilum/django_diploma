@@ -1,87 +1,36 @@
 
 
 
-def product_crutch(data) -> list:
-        new_list = []
-
-        for index in range(len(data)):
-            new_list.append(
-                {
-                    'id':data[index]['id'],
-                    'category':data[index]['category'],
-                    'price':data[index]['price'],
-                    'count':data[index]['count'],
-                    'date':data[index]['date'],
-                    'title':data[index]['title'],
-                    'description':data[index]['description'],
-                    'freeDelivery':data[index]['freeDelivery'],
-                    'images':[
-                        {
-                            'src':data[index]['images'],
-                            'alt':'',
-                            }
-                        ],
-                    'tags':data[index]['tags'],
-                    'reviews':data[index]['reviews'],
-                    # 'rating':data[index]['rating'],
-                }
-            )
-        return new_list
-
-
-def banner_crutch(data) -> list:
-        new_list = [
-            {
-                'id':data['id'],
-                'category':data['category'],
-                'price':data['price'],
-                'count':data['count'],
-                'date':data['date'],
-                'title':data['title'],
-                'description':data['description'],
-                'freeDelivery':data['freeDelivery'],
-                'images':[{
-                    'src':data['images'],
-                    'alt':'',
-                }
-                    ],
-                'tags':data['tags'],
-                'reviews':data['reviews'],
-                # 'rating':data['rating'],
-            }
-        ]
-        return new_list
-
-
 def categories_crutch(data) ->list:
     new_list = []
-    for index in range(len(data)):
+
+    for index in data:
         new_list.append(
             {
-                'id':data[index]['id'],
-                'title':data[index]['title'],
+                'id':index['id'],
+                'title':index['title'],
                 'image':[
                     {
-                        'src':data[index]['image'],
-                        'alt':'',
+                        'src':index['image']['src'],
+                        'alt':index['image']['alt'],
                     },
-                ],
-                'subcategories': [
+                    ],
+                'subcategories':[
                     {
-                        'id':data[index]['id'],
-                        'title':data[index]['title'],
+                        'id':index['subcategories']['id'],
+                        'title':index['subcategories']['title'],
                         'image':[
                             {
-                                'src':data[index]['image'],
-                                'alt':'',
-                            },
-                            ]
-                    }
-                ],
-                
-            }
-        )
+                                'src':index['subcategories']['image']['src'],
+                                'alt':index['subcategories']['image']['alt'],
+                                },
+                            ],
+                        },
+                    ],
+                },
+            ),
     return new_list
+        
 
 
 def sales_crutch(data) -> list:
