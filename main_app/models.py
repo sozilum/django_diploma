@@ -155,6 +155,9 @@ class Specifications(models.Model):
     name = models.CharField(max_length = 50)
     value = models.TextField()
 
+    def __str__(self) -> str:
+        return self.name
+
 
 class Tags(models.Model):
     name = models.CharField(max_length = 50)
@@ -172,10 +175,7 @@ class Product(models.Model):
         ]
 
     title = models.CharField(max_length = 100)
-    images = models.ForeignKey(Productavatar,
-                               on_delete = models.CASCADE,
-                               null = True,
-                               )
+    images = models.ManyToManyField(Productavatar)
     description = models.CharField(max_length = 100,
                                    null = True,
                                    )
@@ -220,12 +220,12 @@ class Product(models.Model):
                                        null = True,
                                        blank = True,
                                        )
-    reviews = models.ForeignKey(Review,
-                                on_delete = models.CASCADE,
-                                null = True,
-                                blank = True,
-                                )
-    rating = models.TextField(null = True)
+    reviews = models.ManyToManyField(Review,
+                                     blank = True,
+                                     )
+    rating = models.TextField(blank = True,
+                              null = True,
+                              )
     
     def __str__(self) -> str:
         return self.title
@@ -233,22 +233,16 @@ class Product(models.Model):
 
 class Basket(models.Model):
     class Meta:
-        ordering = [
-            'products',
-        ]
+        ordering = []
     
     user = models.ForeignKey(User,
                              on_delete = models.CASCADE,
                              )
-    products = models.ForeignKey(Product,
-                                 on_delete = models.CASCADE,
-                                 null = True,
-                                 blank = True,
-                                 )
-    count = models.PositiveSmallIntegerField(default = 0,
-                                             null = True,
-                                             blank = True,
-                                             )
+    products = models.ManyToManyField(Product)
+    # count = models.PositiveSmallIntegerField(default = 0,
+    #                                          null = True,
+    #                                          blank = True,
+    #                                          )
     
     
     def __str__(self) -> str:
@@ -286,7 +280,7 @@ class Order(models.Model):
                             )
     products = models.ForeignKey(Product,
                                  on_delete = models.CASCADE,
-                                 null = True,   
+                                 null = True,
                                  )
     address = models.CharField(max_length = 100)
     deliveryType = models.OneToOneField(DeliveryType,

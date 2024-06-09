@@ -1,4 +1,7 @@
 from rest_framework.views import APIView
+from rest_framework.permissions import (AllowAny, \
+                                        IsAuthenticated,
+                                        )
 from django.contrib.auth import (authenticate,
                                  login,
                                  logout,
@@ -17,17 +20,19 @@ import json
 
 
 class LoginView(APIView):
-    def post_login(self):
-        body = json.loads(self.body)
+    permission_classes = [AllowAny]
+
+    def post(self, request):
+        body = json.loads(request.body)
         username = body['username']
         password = body['password']
-        user = authenticate(request = self,
+        user = authenticate(request = request,
                             username = username,
                             password = password,
                             )
         
         if user is not None:
-            login(request = self,
+            login(request = request,
                   user = user,
                   )
             return HttpResponse(status = 200)
@@ -36,8 +41,10 @@ class LoginView(APIView):
             return HttpResponse(status = 500)
 
 class RegisterView(APIView):
-    def post_register(self):
-        body = json.loads(self.body)
+    permission_classes = [AllowAny]
+
+    def post(self, request):
+        body = json.loads(request.body)
         user = User.objects.create_user(fullName = body['name'],
                                         username = body['username'],
                                         password = body['password'],
@@ -47,21 +54,27 @@ class RegisterView(APIView):
 
 
 class LogoutView(APIView):
-    def post_logout(self):
-        logout(self)
+    permission_classes = [IsAuthenticated]
+    
+    def post(self, request):
+        logout(request)
         return HttpResponse(status = 200)
 
 
 class ProfileView(APIView):
-    def get_profile(self):
-        user = Profile.objects.get(user_id = self.user.pk)
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        user = Profile.objects.get(user_id = request.user.pk)
         profile_serializer = ProfileSerializer(user)
         return JsonResponse(profile_serializer.data)
     
 class UpdateProfileView(APIView):
-    def post_profile(self):
-        body = json.loads(self.body)
-        user = Profile.objects.get(user_id = self.user.pk)
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request):
+        body = json.loads(request.body)
+        user = Profile.objects.get(user_id = request.user.pk)
         
         user.fullName = body['fullName']
         user.phone = body['phone']
@@ -73,10 +86,14 @@ class UpdateProfileView(APIView):
 
 
 class UpdatePasswordView(APIView):
-    def update_password(self):
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request):
         return HttpResponse(status = 200)
 
 class UpdateAvatarView(APIView):
-    def update_avatar(self):
-        self.FILES['avatar']
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request):
+        request.FILES['avatar']
         return HttpResponse(status = 200)

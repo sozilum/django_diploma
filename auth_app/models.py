@@ -8,6 +8,22 @@ def profile_image_downloader(instance:'Profile', filename: str) -> str:
                                                     )
 
 
+
+class AvatarProfile(models.Model):
+    class Meta:
+        pass
+
+    src = models.ImageField(upload_to = profile_image_downloader,
+                            null = True,
+                            blank = True,
+                            )
+    alt = models.CharField(max_length = 50)
+
+    def __str__(self) -> str:
+        return self.alt
+
+
+
 class Profile(models.Model):
     class Meta:
         pass
@@ -15,9 +31,9 @@ class Profile(models.Model):
     user = models.OneToOneField(User,
                                 on_delete = models.CASCADE,
                                 )
-    avatar = models.ImageField(null = True, 
-                               blank = True,
-                               upload_to = profile_image_downloader,
+    avatar = models.ForeignKey(AvatarProfile,
+                               on_delete = models.CASCADE,
+                               null = True,
                                )
     fullName = models.CharField(max_length = 100, 
                                   db_index = True,

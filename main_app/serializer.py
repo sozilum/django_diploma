@@ -13,6 +13,7 @@ from .models import (Product,
                     Subcategoriesavatar,
                     )
 
+import pathlib
 
 class ReviewSerializer(serializers.ModelSerializer):
     class Meta:
@@ -64,7 +65,7 @@ class ProductavatarSerializer(serializers.ModelSerializer):
         ]
 
     def get_src(self, obj):
-        return obj.src.url
+        return pathlib.Path(obj.src.url).as_uri()
 
 
 class SubcategoriesSerializer(serializers.ModelSerializer):
@@ -93,8 +94,8 @@ class CategoriesSerializer(serializers.ModelSerializer):
 
 
 class ProductSerializer(serializers.ModelSerializer):
-    images = ProductavatarSerializer()
-    reviews = ReviewSerializer()
+    images = ProductavatarSerializer(many = True)
+    reviews = ReviewSerializer(many = True)
     
     class Meta:
         model = Product
@@ -118,6 +119,8 @@ class ProductSerializer(serializers.ModelSerializer):
 
 
 class SalesSerializer(serializers.ModelSerializer):
+    images = ProductavatarSerializer()
+
     class Meta:
         model = Product
         fields = [
@@ -175,12 +178,12 @@ class DeliveryTypeSerializer(serializers.ModelSerializer):
 
 
 class BasketSerializer(serializers.ModelSerializer):
-    products = ProductSerializer()
+    products = ProductSerializer(many = True)
 
     class Meta:
         model = Basket
         fields = [
             'user',
             'products',
-            'count',
+            # 'count',
         ]

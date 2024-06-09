@@ -14,6 +14,9 @@ from .models import (Product,
                      Subcategories,
                      )
 
+class ProductImageInline(admin.TabularInline):
+    model = Product.images.through
+
 
 @admin.register(Subcategories)
 class SubcategoriesAdmin(admin.ModelAdmin):
@@ -55,9 +58,12 @@ class ProductavatarAdmin(admin.ModelAdmin):
 @admin.register(Product)
 class ProductAdmin(admin.ModelAdmin):
 
+    inlines = [
+        ProductImageInline,
+    ]
+    
     list_display = [
         'title',
-        'images',
         'description',
         'fullDescription',
         'price',
@@ -70,8 +76,11 @@ class ProductAdmin(admin.ModelAdmin):
         'dateTo',
         'count',
         'available',
-        'reviews',
         'rating',
+    ]
+
+    exclude = [
+        'images'
     ]
 
 
@@ -142,5 +151,5 @@ class BasketAdmin(admin.ModelAdmin):
 
     list_display = [
         'user',
-        'products',
+        # 'count',
     ]

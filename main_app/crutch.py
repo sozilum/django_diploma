@@ -1,4 +1,4 @@
-
+import pathlib
 
 
 def categories_crutch(data) ->list:
@@ -30,30 +30,6 @@ def categories_crutch(data) ->list:
                 },
             ),
     return new_list
-        
-
-
-def sales_crutch(data) -> list:
-    new_list = []
-
-    for index in range(len(data)):
-        new_list.append(
-            {
-                'id':data[index]['id'],
-                'price':data[index]['price'],
-                'salePrice':data[index]['salePrice'],
-                'dateFrom':data[index]['dateFrom'],
-                'dateTo':data[index]['dateTo'],
-                'title':data[index]['title'],
-                'images':[
-                    {
-                        'src':data[index]['images'],
-                        'alt':'',
-                        }
-                    ],
-            }
-        )
-    return new_list
 
 
 def order_crutch(data) -> list:
@@ -76,7 +52,3 @@ def order_crutch(data) -> list:
             }
         )
     return new_list
-
-
-def user_product_crutch(data) -> list:
-    ...

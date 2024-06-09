@@ -20,7 +20,6 @@ from .serializer import (CategoriesSerializer,
                          )
 
 from .crutch import (order_crutch,
-                     user_product_crutch,
                      categories_crutch,
                      )
 
@@ -100,10 +99,10 @@ class SalesProductView(APIView):
         data_serializer = SalesSerializer(queryset,
                                           many = True,
                                           )
-        print('its doesnt work, correctly')
-        return JsonResponse(data = data_serializer.data,
-                            safe = False,
-                            )
+        # 'Need a photo to be visible on page!'
+        # data = sales_crutch(data_serializer.data)
+
+        return JsonResponse(data = {'items':data_serializer.data})
 
 
 class TagsView(APIView):
@@ -128,55 +127,33 @@ class BasketView(APIView):
         data_serializer = BasketSerializer(queryset,
                                            many = True,
                                            )
-        
-        new_list = []
-        for data in data_serializer.data:
-            new_list.append(
-                {
-                    'id':data['products']['id'],
-                    'category':data['products']['category'],
-                    'price':data['products']['price'],
-                    'count':data['count'],
-                    'date':data['products']['date'],
-                    'title':data['products']['title'],
-                    'description':data['products']['description'],
-                    'freeDelivery':data['products']['freeDelivery'],
-                    'images':[
-                        {
-                            'src':data['products']['images']['src'],
-                            'alt':data['products']['images']['alt'],
-                            }
-                        ],
-                    'tags':data['products']['tags'],
-                    'reviews':data['products']['reviews'],
-                    # 'rating':data['products']['rating'],
-                }
-            )
-        return JsonResponse(data = new_list,
+        return JsonResponse(data = data_serializer.data[0]['products'],
                             safe = False,
                             )
     
     def post(self, request):
-        print(request.POST)
-        print('works, post?')
+        print('works, post? Basket')
+        json_file = json.loads(request.body)
+        print(json_file)
         return HttpResponse(status = 200)
     
 
     def delete(self, request):
-        body = json.loads(request.body)
-        queryset = Basket.objects.filter(user_id = request.user.id,
-                                         products_id = body['id'],
-                                         )
-        serializer_data = BasketSerializer(queryset,
-                                           many = True,
-                                           )
+        print(request.body)
+        # body = json.loads(request.body)
+        # queryset = Basket.objects.filter(user_id = request.user.id,
+        #                                  products_id = body['id'],
+        #                                  )
+        # serializer_data = BasketSerializer(queryset,
+        #                                    many = True,
+        #                                    )
 
-        if serializer_data.data[0]['count'] == body['count']:
-            queryset.delete()
+        # if serializer_data.data[0]['count'] == body['count']:
+        #     queryset.delete()
 
-        else:
-            num = serializer_data.data[0]['count'] - body['count']
-            queryset.update(count = num)
+        # else:
+        #     num = serializer_data.data[0]['count'] - body['count']
+        #     queryset.update(count = num)
         
         return HttpResponse(status = 200)
 
@@ -208,7 +185,7 @@ class UserOrderView(APIView):
 
 
     def get(self, request, id):
-        ...
+        print('its user order view, its work?')
         return HttpResponse(status = 200)
 
     def post(self, request, id):
@@ -219,6 +196,6 @@ class UserOrderView(APIView):
 class PaymentView(APIView):
     permission_classes = [IsAuthenticated]
 
-    def get(self):
-        ...
+    def get(self, request):
+        print('payment page is working?')
         return HttpResponse(status = 200)
