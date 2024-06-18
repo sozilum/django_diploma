@@ -24,7 +24,6 @@ class SubcategoriesAdmin(admin.ModelAdmin):
     list_display = [
         'title',
         'image',
-
     ]
 
 
@@ -106,17 +105,15 @@ class PaymetAdmin(admin.ModelAdmin):
 
 @admin.register(Order)
 class OrderAdmin(admin.ModelAdmin):
-
+    
     list_display = [
-        'fullName',
+        'fullName', 
         'email',
-        'phone',
         'paymentType',
+        'phone',
         'totalCost',
         'city',
-        'products',
         'address',
-        'deliveryType',
         'createdAt',
         'status',
     ]
@@ -151,5 +148,6 @@ class BasketAdmin(admin.ModelAdmin):
 
     list_display = [
         'user',
-        # 'count',
+        'count',
+        'products',
     ]

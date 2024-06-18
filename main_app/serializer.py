@@ -13,7 +13,34 @@ from .models import (Product,
                     Subcategoriesavatar,
                     )
 
-import pathlib
+
+class DeliveryTypeSerializer(serializers.ModelSerializer):
+    name = serializers.SerializerMethodField()
+    
+    class Meta:
+        model = DeliveryType
+        fields = [
+            'name',
+        ]
+
+    def get_name(self, obj):
+        print(obj)
+        return str(obj.name)
+
+
+class PaymentmethodSerializer(serializers.ModelSerializer):
+    name = serializers.SerializerMethodField()
+    
+    class Meta:
+        model = Payment
+        fields = [
+            'name',
+        ]
+
+    def get_name(self, obj):
+        print(obj)
+        return str(obj)
+
 
 class ReviewSerializer(serializers.ModelSerializer):
     class Meta:
@@ -22,7 +49,6 @@ class ReviewSerializer(serializers.ModelSerializer):
             'author',
             'email',
             'points',
-            'title',
             'text',
             'date',
         ]
@@ -65,11 +91,12 @@ class ProductavatarSerializer(serializers.ModelSerializer):
         ]
 
     def get_src(self, obj):
-        return pathlib.Path(obj.src.url).as_uri()
+        return obj.src.url
 
 
 class SubcategoriesSerializer(serializers.ModelSerializer):
     image = SubcategoriesavatarSerializer()
+    title = serializers.SerializerMethodField()
 
     class Meta:
         model = Subcategories
@@ -78,6 +105,10 @@ class SubcategoriesSerializer(serializers.ModelSerializer):
             'title',
             'image',
         ]
+        
+    def get_title(self, obj):
+        return obj.title
+
 
 class CategoriesSerializer(serializers.ModelSerializer):
     subcategories = SubcategoriesSerializer()
@@ -135,28 +166,24 @@ class SalesSerializer(serializers.ModelSerializer):
 
 
 class OrderSerializer(serializers.ModelSerializer):
+    deliveryType = DeliveryTypeSerializer()
+    paymentType = PaymentmethodSerializer()
+    
     class Meta:
         model = Order
         fields = [
+            'id',
+            'createdAt',
             'fullName',
             'email',
             'phone',
+            'deliveryType',
             'paymentType',
             'totalCost',
-            'city',
-            'products',
-            'address',
-            'deliveryType',
-            'createdAt',
             'status',
-        ]
-
-
-class PaymentmethodSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Payment
-        fields = [
-            'name',
+            'city',
+            'address',
+            'products',
         ]
 
 
@@ -168,22 +195,11 @@ class TagsSerializer(serializers.ModelSerializer):
         ]
 
 
-
-class DeliveryTypeSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = DeliveryType
-        fields = [
-            'name',
-        ]
-
-
 class BasketSerializer(serializers.ModelSerializer):
-    products = ProductSerializer(many = True)
-
     class Meta:
         model = Basket
         fields = [
             'user',
             'products',
-            # 'count',
+            'count',
         ]

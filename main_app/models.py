@@ -170,7 +170,6 @@ class Product(models.Model):
     class Meta:
         ordering = [
             'title',
-            'price',
             'producer',
         ]
 
@@ -238,11 +237,15 @@ class Basket(models.Model):
     user = models.ForeignKey(User,
                              on_delete = models.CASCADE,
                              )
-    products = models.ManyToManyField(Product)
-    # count = models.PositiveSmallIntegerField(default = 0,
-    #                                          null = True,
-    #                                          blank = True,
-    #                                          )
+    products = models.ForeignKey(Product,
+                                 on_delete=models.CASCADE,
+                                 null = True,
+                                 blank = True,
+                                 )
+    count = models.PositiveSmallIntegerField(default = 0,
+                                             null = True,
+                                             blank = True,
+                                             )
     
     
     def __str__(self) -> str:
@@ -255,10 +258,10 @@ class Order(models.Model):
             'createdAt',
             ]
 
-    fullName = models.OneToOneField(User,
-                                    on_delete = models.CASCADE,
-                                    null = True,
-                                    )
+    fullName = models.ForeignKey(User,
+                                 on_delete = models.CASCADE,
+                                 null = True,
+                                 )
     email = models.TextField(user_email,
                              default = None,
                              null = True,
@@ -278,15 +281,13 @@ class Order(models.Model):
                             default = None,
                             null = True,
                             )
-    products = models.ForeignKey(Product,
-                                 on_delete = models.CASCADE,
-                                 null = True,
-                                 )
+    products = models.ManyToManyField(Basket)
     address = models.CharField(max_length = 100)
-    deliveryType = models.OneToOneField(DeliveryType,
-                                        on_delete = models.CASCADE,
-                                        null = True,
-                                        )
+    deliveryType = models.ForeignKey(DeliveryType,
+                                     on_delete=models.CASCADE,
+                                     blank = True,
+                                     null = True,
+                                     )
     createdAt = models.DateTimeField(auto_now_add = True)
     status = models.BooleanField(default = True)
 
