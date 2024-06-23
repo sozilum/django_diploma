@@ -1,9 +1,7 @@
 from rest_framework.views import APIView
 from rest_framework.permissions import IsAuthenticated, AllowAny
 
-from django.urls import (reverse_lazy,
-                         reverse,
-                         )
+from django.urls import (reverse_lazy)
 from django.http import (HttpResponse,
                          JsonResponse,
                          HttpResponseRedirect,
@@ -129,7 +127,9 @@ class BasketView(APIView):
 
 
     def get(self, request):
-        queryset = Basket.objects.filter(user_id = request.user.id)
+        queryset = Basket.objects.filter(user_id = request.user.id,
+                                         archived = False,
+                                         )
         data_serializer = BasketSerializer(queryset,
                                            many = True,
                                            )
@@ -150,7 +150,8 @@ class BasketView(APIView):
     
     def post(self, request):
         queryset = Basket.objects.filter(user_id = request.user.id,
-                                         products_id = request.data['id']
+                                         products_id = request.data['id'],
+                                         archived = False,
                                          )
         data_serializer = BasketSerializer(queryset,
                                            many = True,
@@ -162,7 +163,8 @@ class BasketView(APIView):
     def delete(self, request):
         data = json.loads(request.body)
         queryset = Basket.objects.filter(user_id = request.user.id,
-                                         products_id = data['id']
+                                         products_id = data['id'],
+                                         archived = False,
                                          )
         data_serializer = BasketSerializer(queryset,
                                            many = True,
@@ -180,16 +182,13 @@ class BasketView(APIView):
 
 class OrderView(APIView):
     permission_classes = [IsAuthenticated]
-    #history-order - actual page
-
     def get(self, request):
-        queryset = Order.objects.filter(fullName_id = request.user.id)
+        queryset = Order.objects.filter(fullName_id = request.user.id,
+                                        status = True,
+                                        )
         data_serializer = OrderSerializer(queryset,
                                           many = True,
                                           )
-        
-        
-        # data = order_crutch(serializer_data.data)
         print(request.data, 'Its OrderView Get request')
         
         return JsonResponse(data = data_serializer.data,
@@ -197,13 +196,34 @@ class OrderView(APIView):
                             )
 
     def post(self, request):
-        print(request.data, 'Its OrderView POST request')
+        print('Its OrderView POST request')
+        #TODO разобраться как создать объект для order и при этом указать там связь с продуктами из модели Basket
+        #???
+        if request.data[0]['title']:
+            order_queryset = Order.objects.get_or_create(fullName_id = request.user.id,
+                                                         status = True,
+                                                         )
+            basket_query = Basket.objects.filter(user_id = request.user.id,
+                                                 archived = False,
+                                                 )
+            basket_serializer = BasketSerializer(basket_query,
+                                                 many = True,
+                                                 )
+            
+            new_list = []
+            for index in range(len(basket_query)):
+                new_list.append(basket_query[index:index+1:])
+            
+            # print(basket_query)
+            # print(order_queryset)
+            # order_queryset
         
-        queryset = Order.objects.filter(fullName_id = request.user.id,
-                                        status = True,
-                                        )
+        else:
+            print(request.data)
+            print('Its else ')
+            ...
         
-        return HttpResponse(status = 200)
+        return HttpResponse(status = 200)#HttpResponseRedirect()
 
 
 class UserOrderView(APIView):

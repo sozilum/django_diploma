@@ -4,20 +4,14 @@ from django.db import models
 
 
 
-def image_upload(instance:'Product', filename: str) -> str:
-    return 'product/product_{pk}/{filename}'.format(pk = instance.pk,
-                                                    filename = filename,
-                                                    )
+def image_upload(instance:'Product' , filename: str) -> str:
+    return 'products/{filename}'.format(filename = filename)
 
 def image_upload_categories(instance:'Categories', filename:str) -> str:
-    return 'categories/category_{pk}/{filename}'.format(pk = instance.pk,
-                                                        filename = filename,
-                                                        )
+    return 'categories/{filename}'.format(filename = filename)
 
 def image_upload_subcategories(instance:'Subcategories', filename:str) -> str:
-    return 'subcategories/subcategory_{pk}/{filename}'.format(pk = instance.pk,
-                                                               filename = filename,
-                                                               )
+    return 'subcategories/{filename}'.format(filename = filename)
 
 # Бесполезный кусок кода...
 def order_free_delivery(self):
@@ -37,7 +31,7 @@ def avg_rating(self):
     
     else:
         return 0
-#   
+    
 
 def total_cost(self):
     cost = int()
@@ -92,7 +86,7 @@ class Productavatar(models.Model):
 class Subcategories(models.Model):
     title = models.CharField(max_length = 50)
     image = models.ForeignKey(Subcategoriesavatar,
-                              on_delete = models.CASCADE,
+                              on_delete = models.PROTECT,
                               null = True,
                               )
     
@@ -102,11 +96,11 @@ class Subcategories(models.Model):
 class Categories(models.Model):
     title = models.CharField(max_length = 50)
     image = models.ForeignKey(Categoriesavatar,
-                              on_delete = models.CASCADE,
+                              on_delete = models.PROTECT,
                               null = True,
                               )
     subcategories = models.ForeignKey(Subcategories,
-                                      on_delete = models.CASCADE,
+                                      on_delete = models.PROTECT,
                                       null = True,
                                       blank = True,
                                       )
@@ -122,10 +116,10 @@ class Review(models.Model):
             'points',
         ]
 
-    author = models.OneToOneField(User,
-                                  on_delete = models.CASCADE,
-                                  null = True,
-                                  )
+    author = models.ForeignKey(User,
+                               on_delete = models.CASCADE,
+                               null = True,
+                               )
     email = models.TextField(user_email,
                              null = True,
                              )
@@ -194,11 +188,11 @@ class Product(models.Model):
                                 )
     date = models.DateTimeField(auto_now_add = True)
     tags = models.ForeignKey(Tags,
-                             on_delete = models.CASCADE,
+                             on_delete = models.PROTECT,
                              null = True,
                              )
     category = models.ForeignKey(Categories,
-                                   on_delete = models.CASCADE,
+                                   on_delete = models.PROTECT,
                                    null = True,
                                    )
     freeDelivery = models.BooleanField(default = False)
@@ -215,7 +209,7 @@ class Product(models.Model):
                                     default = 0,
                                     )
     specifications = models.ForeignKey(Specifications,
-                                       on_delete = models.CASCADE,
+                                       on_delete = models.PROTECT,
                                        null = True,
                                        blank = True,
                                        )
@@ -246,6 +240,7 @@ class Basket(models.Model):
                                              null = True,
                                              blank = True,
                                              )
+    archived = models.BooleanField(default = False)#При оформлении корзины в заказ, сама карзина архивируется и скрывается от пользователя
     
     
     def __str__(self) -> str:
@@ -271,7 +266,7 @@ class Order(models.Model):
                              null = True,
                              )
     paymentType = models.ForeignKey(Payment,
-                                    on_delete = models.CASCADE,
+                                    on_delete = models.PROTECT,
                                     null = True,
                                     )
     totalCost = models.TextField(total_cost,
@@ -284,7 +279,7 @@ class Order(models.Model):
     products = models.ManyToManyField(Basket)
     address = models.CharField(max_length = 100)
     deliveryType = models.ForeignKey(DeliveryType,
-                                     on_delete=models.CASCADE,
+                                     on_delete=models.PROTECT,
                                      blank = True,
                                      null = True,
                                      )

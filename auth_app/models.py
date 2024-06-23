@@ -3,9 +3,7 @@ from django.db import models
 
 
 def profile_image_downloader(instance:'Profile', filename: str) -> str:
-    return 'profile/profile_{pk}/{filename}'.format(pk = instance.pk,
-                                                    filename = filename,
-                                                    )
+    return 'profile/{filename}'.format(filename = filename)
 
 
 
