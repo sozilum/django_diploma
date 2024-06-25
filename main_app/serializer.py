@@ -196,11 +196,12 @@ class TagsSerializer(serializers.ModelSerializer):
 
 
 class BasketSerializer(serializers.ModelSerializer):
+    products = ProductSerializer(many = True)
+
     class Meta:
         model = Basket
         fields = [
             'id',
             'user',
             'products',
-            'count',
         ]

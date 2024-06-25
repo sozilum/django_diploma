@@ -18,7 +18,7 @@ class ProductImageInline(admin.TabularInline):
     model = Product.images.through
 
 class ProductInline(admin.TabularInline):
-    model = Product.title
+    model = Product
 
 @admin.register(Subcategories)
 class SubcategoriesAdmin(admin.ModelAdmin):
@@ -108,9 +108,6 @@ class PaymetAdmin(admin.ModelAdmin):
 @admin.register(Order)
 class OrderAdmin(admin.ModelAdmin):
     #TODO посмотреть как можно сделать так, что-бы было видно название продукта, а не имя пользователя
-    list_display = [
-        ProductInline
-    ]
     
     list_display = [
         'fullName', 
@@ -156,7 +153,5 @@ class BasketAdmin(admin.ModelAdmin):
 
     list_display = [
         'user',
-        'count',
-        'products',
         'archived',
     ]

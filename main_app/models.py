@@ -231,17 +231,8 @@ class Basket(models.Model):
     user = models.ForeignKey(User,
                              on_delete = models.CASCADE,
                              )
-    products = models.ForeignKey(Product,
-                                 on_delete=models.CASCADE,
-                                 null = True,
-                                 blank = True,
-                                 )
-    count = models.PositiveSmallIntegerField(default = 0,
-                                             null = True,
-                                             blank = True,
-                                             )
-    archived = models.BooleanField(default = False)#При оформлении корзины в заказ, сама карзина архивируется и скрывается от пользователя
-    
+    products = models.ManyToManyField(Product)
+    archived = models.BooleanField(default = False)
     
     def __str__(self) -> str:
         return str(self.user)

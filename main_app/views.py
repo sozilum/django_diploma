@@ -62,6 +62,7 @@ class CatalogView(APIView):
         data_serializer = ProductSerializer(queryset,
                                             many = True,
                                             )
+        print('Its CatalogView GET request')
         return JsonResponse(data = data_serializer.data,
                             safe = False,
                             )
@@ -134,16 +135,9 @@ class BasketView(APIView):
                                            many = True,
                                            )
 
-        new_list = []
-        for data_index in data_serializer.data:
-            product_query = Product.objects.filter(id = data_index['products'])
-            product_serializer = ProductSerializer(product_query,
-                                                   many = True,
-                                                   )
-            product_serializer.data[0]['count'] = data_index['count']
-            new_list.append(product_serializer.data[0])
-            
-        return JsonResponse(data = new_list,
+        print('Its BasketView GET request')
+        # print(data_serializer.data[0])
+        return JsonResponse(data = data_serializer.data[0]['products'],
                             safe = False,
                             )
     
@@ -156,8 +150,9 @@ class BasketView(APIView):
         data_serializer = BasketSerializer(queryset,
                                            many = True,
                                            )
-        queryset.update(count = data_serializer.data[0]['count'] + request.data['count'])
-        return HttpResponseRedirect(redirect_to = reverse_lazy('basket'))
+        print('Its BasketView POST request')
+        print(data_serializer.data)
+        return HttpResponse(status = 200)
     
 
     def delete(self, request):
@@ -169,14 +164,8 @@ class BasketView(APIView):
         data_serializer = BasketSerializer(queryset,
                                            many = True,
                                            )
-        
-        if data_serializer.data[0]['count'] - data['count'] != 0:
-            queryset.update(count = data_serializer.data[0]['count'] - data['count'])
-        
-        else:
-            queryset.delete()
-        
-        # return HttpResponseRedirect(redirect_to = reverse_lazy('basket')) looping...
+        print('Its BasketView DELETE request')
+        print(data_serializer.data)
         return HttpResponse(status = 200)
 
 
@@ -197,8 +186,6 @@ class OrderView(APIView):
 
     def post(self, request):
         print('Its OrderView POST request')
-        #TODO разобраться как создать объект для order и при этом указать там связь с продуктами из модели Basket
-        #???
         if request.data[0]['title']:
             order_queryset = Order.objects.get_or_create(fullName_id = request.user.id,
                                                          status = True,
