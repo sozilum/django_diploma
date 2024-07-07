@@ -4,7 +4,7 @@ from django.db import models
 
 
 
-def image_upload(instance:'Product' , filename: str) -> str:
+def image_upload(instance:'Products' , filename: str) -> str:
     return 'products/{filename}'.format(filename = filename)
 
 def image_upload_categories(instance:'Categories', filename:str) -> str:
@@ -116,11 +116,11 @@ class Review(models.Model):
             'points',
         ]
 
-    author = models.ForeignKey(User,
-                               on_delete = models.CASCADE,
-                               null = True,
-                               )
-    email = models.TextField(user_email,
+    author = models.CharField(blank = True,
+                              null = True,
+                              max_length = 100,
+                              )
+    email = models.TextField(blank = True,
                              null = True,
                              )
     points = models.PositiveSmallIntegerField(null = True)
@@ -160,7 +160,7 @@ class Tags(models.Model):
         return self.name
 
 
-class Product(models.Model):
+class Products(models.Model):
     class Meta:
         ordering = [
             'title',
@@ -216,26 +216,30 @@ class Product(models.Model):
     reviews = models.ManyToManyField(Review,
                                      blank = True,
                                      )
-    rating = models.TextField(blank = True,
-                              null = True,
-                              )
+    rating = models.PositiveSmallIntegerField(blank = True,
+                                              null = True,
+                                              )
     
     def __str__(self) -> str:
         return self.title
 
 
-class Basket(models.Model):
+class BasketItems(models.Model):
     class Meta:
-        ordering = []
-    
-    user = models.ForeignKey(User,
-                             on_delete = models.CASCADE,
+        pass
+
+    user = models.ForeignKey(User, 
+                             on_delete=models.CASCADE,
                              )
-    products = models.ManyToManyField(Product)
-    archived = models.BooleanField(default = False)
-    
+    products = models.ForeignKey(Products,
+                                 on_delete = models.PROTECT,
+                                 blank = True,
+                                 )
+    count = models.PositiveIntegerField(default = 0)
+    archived = models.BooleanField(default = 0)
+
     def __str__(self) -> str:
-        return str(self.user)
+        return '{}, {}'.format(self.user, self.products)
 
 
 class Order(models.Model):
@@ -248,27 +252,30 @@ class Order(models.Model):
                                  on_delete = models.CASCADE,
                                  null = True,
                                  )
-    email = models.TextField(user_email,
-                             default = None,
+    email = models.TextField(default = None,
+                             blank = True,
                              null = True,
                              )
-    phone = models.TextField(user_phone,
-                             default = None,
+    phone = models.TextField(default = None,
+                             blank = True,
                              null = True,
                              )
     paymentType = models.ForeignKey(Payment,
                                     on_delete = models.PROTECT,
+                                    blank = True,
                                     null = True,
                                     )
-    totalCost = models.TextField(total_cost,
-                                 default = 0,
-                                 )
+    totalCost = models.PositiveSmallIntegerField(default = 0)
     city = models.TextField(max_length = 50,
                             default = None,
+                            blank = True,
                             null = True,
                             )
-    products = models.ManyToManyField(Basket)
-    address = models.CharField(max_length = 100)
+    baskets = models.ManyToManyField(BasketItems)
+    address = models.CharField(max_length = 100,
+                               blank = True,
+                               null = True,
+                               )
     deliveryType = models.ForeignKey(DeliveryType,
                                      on_delete=models.PROTECT,
                                      blank = True,
@@ -278,4 +285,4 @@ class Order(models.Model):
     status = models.BooleanField(default = True)
 
     def __str__(self) -> str:
-        return str(self.products)
+        return '{}, {}'.format(self.fullName, self.baskets)

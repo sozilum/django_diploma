@@ -1,16 +1,16 @@
 from rest_framework import serializers
-from .models import (Product,
+from .models import (Products,
                     Order,
                     Payment,
                     Review,
                     Tags,
                     Categories,
                     DeliveryType,
-                    Basket,
                     Subcategories,
                     Productavatar,
                     Categoriesavatar,
                     Subcategoriesavatar,
+                    BasketItems
                     )
 
 
@@ -129,7 +129,7 @@ class ProductSerializer(serializers.ModelSerializer):
     reviews = ReviewSerializer(many = True)
     
     class Meta:
-        model = Product
+        model = Products
         fields = [
             'id',
             'category',
@@ -153,7 +153,7 @@ class SalesSerializer(serializers.ModelSerializer):
     images = ProductavatarSerializer()
 
     class Meta:
-        model = Product
+        model = Products
         fields = [
             'id',
             'price',
@@ -164,11 +164,21 @@ class SalesSerializer(serializers.ModelSerializer):
             'images',
         ]
 
+class BasketItemSerializer(serializers.ModelSerializer):
+    products = ProductSerializer()
+    
+    class Meta:
+        model = BasketItems
+        fields = [
+            'products',
+            'count',
+        ]
 
 class OrderSerializer(serializers.ModelSerializer):
     deliveryType = DeliveryTypeSerializer()
     paymentType = PaymentmethodSerializer()
-    
+    baskets = BasketItemSerializer(many = True)
+
     class Meta:
         model = Order
         fields = [
@@ -183,7 +193,7 @@ class OrderSerializer(serializers.ModelSerializer):
             'status',
             'city',
             'address',
-            'products',
+            'baskets',
         ]
 
 
@@ -192,16 +202,4 @@ class TagsSerializer(serializers.ModelSerializer):
         model = Tags
         fields = [
             'name',
-        ]
-
-
-class BasketSerializer(serializers.ModelSerializer):
-    products = ProductSerializer(many = True)
-
-    class Meta:
-        model = Basket
-        fields = [
-            'id',
-            'user',
-            'products',
         ]

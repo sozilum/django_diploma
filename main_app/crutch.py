@@ -1,5 +1,29 @@
 import pathlib
 
+def userorderview(self):
+    new_list = []
+    for product in self['baskets']:
+        product['products']['count'] = product['count']
+        new_list.append(product['products'])
+
+
+    data = {
+        "id": self['id'],
+        "createdAt": self['createdAt'],
+        "fullName": self['fullName'],
+        "email": self['email'],
+        "phone": self['phone'],
+        "deliveryType": self['deliveryType'],
+        "paymentType": self['paymentType'],
+        "totalCost": self['totalCost'],
+        "status": self['status'],
+        "city": self['city'],
+        "address": self['address'],
+        "products": new_list,
+    }
+    return data
+
+
 
 def categories_crutch(data) ->list:
     new_list = []

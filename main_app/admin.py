@@ -1,24 +1,24 @@
 from django.contrib import admin
 
-from .models import (Product,
+from .models import (Products,
                      Review,
                      Payment,
                      Order,
                      Tags,
                      Categories,
                      DeliveryType,
-                     Basket,
                      Productavatar,
                      Categoriesavatar,
                      Subcategoriesavatar,
                      Subcategories,
+                     BasketItems,
                      )
 
 class ProductImageInline(admin.TabularInline):
-    model = Product.images.through
+    model = Products.images.through
 
 class ProductInline(admin.TabularInline):
-    model = Product
+    model = Products
 
 @admin.register(Subcategories)
 class SubcategoriesAdmin(admin.ModelAdmin):
@@ -56,7 +56,7 @@ class ProductavatarAdmin(admin.ModelAdmin):
     ]
 
 
-@admin.register(Product)
+@admin.register(Products)
 class ProductAdmin(admin.ModelAdmin):
 
     inlines = [
@@ -148,8 +148,9 @@ class DeliveryTypeAdmin(admin.ModelAdmin):
         'name',
     ]
 
-@admin.register(Basket)
-class BasketAdmin(admin.ModelAdmin):
+
+@admin.register(BasketItems)
+class BasketItemAdmin(admin.ModelAdmin):
 
     list_display = [
         'user',

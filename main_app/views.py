@@ -6,11 +6,11 @@ from django.http import (HttpResponse,
                          JsonResponse,
                          HttpResponseRedirect,
                          )
-from .models import (Product,
+from .models import (Products,
                      Categories,
                      Tags,
                      Order,
-                     Basket,
+                     BasketItems,
                      )
 
 from .serializer import (CategoriesSerializer,
@@ -18,12 +18,11 @@ from .serializer import (CategoriesSerializer,
                          SalesSerializer,
                          TagsSerializer,
                          OrderSerializer,
-                         BasketSerializer,
+                         BasketItemSerializer,
+                         ReviewSerializer,
                          )
 
-from .crutch import (order_crutch,
-                     categories_crutch,
-                     )
+from .crutch import userorderview
 
 import json
 
@@ -32,13 +31,54 @@ class BannerView(APIView):
     permission_classes = [AllowAny]
 
     def get(self, request):
-        queryset = Product.objects.all()
+        queryset = Products.objects.all()
         serializer_data = ProductSerializer(queryset,
                                             many = True,
                                             )
         return JsonResponse(data = serializer_data.data,
                             safe = False,
                             )
+
+class ProductView(APIView):
+    permission_classes = [AllowAny]
+
+    def get(self, request, id):
+        queryset = Products.objects.filter(id = id)
+        data_serializer = ProductSerializer(queryset,
+                                            many = True,
+                                            )
+        return JsonResponse(data = data_serializer.data[0])
+
+
+class ProductReviewView(APIView):
+    permission_classes = [AllowAny]
+
+    def get(self, request, id):
+        queryset = Products.objects.filter(id = id)
+        data_serializer = ProductSerializer(queryset,
+                                            many = True,
+                                            )
+        reviews = data_serializer.data[0]['reviews']
+        return JsonResponse(data = reviews,
+                            safe = False,
+                            )
+
+    def post(self, request, id):
+        queryset = Products.objects.filter(id = id)
+        
+        for data in queryset:
+            data.reviews.create(author = request.data['author'],
+                                email = request.data['email'],
+                                text = request.data['text'],
+                                )
+        
+        data_serializer = ProductSerializer(queryset,
+                                            many = True,
+                                            )
+        print(data_serializer.data)
+        
+
+        return HttpResponse(status = 200)
 
 
 class CategoriesView(APIView):
@@ -58,7 +98,7 @@ class CatalogView(APIView):
     permission_classes = [AllowAny]
 
     def get(self, request):
-        queryset = Product.objects.all()
+        queryset = Products.objects.all()
         data_serializer = ProductSerializer(queryset,
                                             many = True,
                                             )
@@ -72,7 +112,7 @@ class PopularProductView(APIView):
     permission_classes = [AllowAny]
 
     def get(self, request):
-        queryset = Product.objects.all()
+        queryset = Products.objects.all()
         data_serializer = ProductSerializer(queryset,
                                             many = True,
                                             )
@@ -85,7 +125,7 @@ class LimitedProductView(APIView):
     permission_classes = [AllowAny]
 
     def get(self, request):
-        queryset = Product.objects.all()
+        queryset = Products.objects.all()
         data_serializer = ProductSerializer(queryset,
                                             many = True,
                                             )
@@ -98,7 +138,7 @@ class SalesProductView(APIView):
     permission_classes = [AllowAny]
 
     def get(self, request):
-        queryset = Product.objects.all()
+        queryset = Products.objects.all()
         data_serializer = SalesSerializer(queryset,
                                           many = True,
                                           )
@@ -122,58 +162,70 @@ class TagsView(APIView):
                             )
 
 
-
 class BasketView(APIView):
     permission_classes = [IsAuthenticated]
 
 
     def get(self, request):
-        queryset = Basket.objects.filter(user_id = request.user.id,
-                                         archived = False,
-                                         )
-        data_serializer = BasketSerializer(queryset,
-                                           many = True,
-                                           )
+        queryset = BasketItems.objects.filter(user_id = request.user.id,
+                                              archived = False,
+                                              )
+        data_serializer = BasketItemSerializer(queryset,
+                                               many = True,
+                                               )
+        new_list = []
+        for data_index in data_serializer.data:
+            data_index['products']['count'] = data_index['count']
+            new_list.append(data_index['products'])
 
-        print('Its BasketView GET request')
-        # print(data_serializer.data[0])
-        return JsonResponse(data = data_serializer.data[0]['products'],
+        return JsonResponse(data = new_list,
                             safe = False,
                             )
     
     
     def post(self, request):
-        queryset = Basket.objects.filter(user_id = request.user.id,
-                                         products_id = request.data['id'],
-                                         archived = False,
-                                         )
-        data_serializer = BasketSerializer(queryset,
-                                           many = True,
-                                           )
-        print('Its BasketView POST request')
-        print(data_serializer.data)
+        queryset = BasketItems.objects.filter(user_id = request.user.id,
+                                              archived = False,
+                                              products_id = request.data['id']
+                                              )
+        data_serializer = BasketItemSerializer(queryset,
+                                               many = True,
+                                               )
+        try:
+            queryset.update(count = data_serializer.data[0]['count'] + request.data['count'])
+        
+        except:
+            queryset.create(count = request.data['count'],
+                            user_id = request.user.id,
+                            products_id = request.data['id'], 
+                            )
+
         return HttpResponse(status = 200)
     
 
     def delete(self, request):
         data = json.loads(request.body)
-        queryset = Basket.objects.filter(user_id = request.user.id,
-                                         products_id = data['id'],
-                                         archived = False,
-                                         )
-        data_serializer = BasketSerializer(queryset,
-                                           many = True,
-                                           )
-        print('Its BasketView DELETE request')
-        print(data_serializer.data)
+        queryset = BasketItems.objects.filter(user_id = request.user.id,
+                                              products_id = data['id'],
+                                              archived = False,
+                                              )
+        data_serializer = BasketItemSerializer(queryset,
+                                               many = True,
+                                               )
+        count = data_serializer.data[0]['count']
+        if data['count'] == count:
+            queryset.delete()
+
+        else:
+            queryset.update(count = count - data['count'])
         return HttpResponse(status = 200)
 
 
 class OrderView(APIView):
     permission_classes = [IsAuthenticated]
+
     def get(self, request):
         queryset = Order.objects.filter(fullName_id = request.user.id,
-                                        status = True,
                                         )
         data_serializer = OrderSerializer(queryset,
                                           many = True,
@@ -185,32 +237,28 @@ class OrderView(APIView):
                             )
 
     def post(self, request):
-        print('Its OrderView POST request')
-        if request.data[0]['title']:
-            order_queryset = Order.objects.get_or_create(fullName_id = request.user.id,
-                                                         status = True,
-                                                         )
-            basket_query = Basket.objects.filter(user_id = request.user.id,
-                                                 archived = False,
-                                                 )
-            basket_serializer = BasketSerializer(basket_query,
-                                                 many = True,
-                                                 )
-            
-            new_list = []
-            for index in range(len(basket_query)):
-                new_list.append(basket_query[index:index+1:])
-            
-            # print(basket_query)
-            # print(order_queryset)
-            # order_queryset
-        
-        else:
-            print(request.data)
-            print('Its else ')
-            ...
-        
-        return HttpResponse(status = 200)#HttpResponseRedirect()
+        basket_query = BasketItems.objects.filter(user_id = request.user.id,
+                                                  archived = False,
+                                                  )
+        num = 0
+        for basket_data in request.data:
+            num += float(basket_data['count']) * float(basket_data['price'])
+
+        Order.objects.update_or_create(fullName_id = request.user.id,
+                                       status = True,
+                                       totalCost = num,
+                                       )
+        order_query = Order.objects.filter(fullName_id = request.user.id, 
+                                           status = True,
+                                           )
+        for order in order_query:
+            order.baskets.set(basket_query)
+
+        data_serializer = OrderSerializer(order_query,
+                                          many = True,
+                                          )
+        data = {'orderId':data_serializer.data[0]['id']}
+        return JsonResponse(data)
 
 
 class UserOrderView(APIView):
@@ -218,25 +266,34 @@ class UserOrderView(APIView):
 
     def get(self, request, id):
         queryset = Order.objects.filter(fullName = request.user.id,
+                                        status = True,
                                         id = id,
                                         )
         data_serializer = OrderSerializer(queryset,
                                           many = True,
-                                          )        
-        
-        print('Its UserOrderView, GET request')
-        return JsonResponse(data = data_serializer.data,
-                            safe = False,
-                            )
+                                          )
+        data = userorderview(data_serializer.data[0])
+        # print(data_serializer.data[0])
+        return JsonResponse(data = data)
 
     def post(self, request, id):
-        print('its UserOrderView, POST request')
+        queryset = Order.objects.filter(fullName = request.user.id,
+                                        status = True,
+                                        id = id,
+                                        )
+        queryset.update(email = request.data['email'],
+                        phone = request.data['phone'],
+                        city = request.data['city'],
+                        address = request.data['address'],
+                        deliveryType = request.data['deliveryType'],
+                        paymentType = request.data['paymentType'],
+                        )
         return HttpResponse(status = 200)
 
 
 class PaymentView(APIView):
     permission_classes = [IsAuthenticated]
 
-    def get(self, request):
+    def get(self, request, id):
         print('Its paymetnview, GET request')
         return HttpResponse(status = 200)
