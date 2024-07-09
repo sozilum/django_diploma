@@ -1,4 +1,3 @@
-import pathlib
 
 def userorderview(self):
     new_list = []
@@ -22,8 +21,6 @@ def userorderview(self):
         "products": new_list,
     }
     return data
-
-
 
 def categories_crutch(data) ->list:
     new_list = []

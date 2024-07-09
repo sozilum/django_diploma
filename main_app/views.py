@@ -22,7 +22,9 @@ from .serializer import (CategoriesSerializer,
                          ReviewSerializer,
                          )
 
-from .crutch import userorderview
+from .crutch import (userorderview,
+                     categories_crutch,
+                     )
 
 import json
 
@@ -47,6 +49,10 @@ class ProductView(APIView):
         data_serializer = ProductSerializer(queryset,
                                             many = True,
                                             )
+        
+        url = data_serializer.data[0]['images'][0]['src']
+        data_serializer.data[0]['images'][0]['src'] = f'/home/verghil/Desktop/diploma{url}'
+        
         return JsonResponse(data = data_serializer.data[0])
 
 
@@ -75,8 +81,6 @@ class ProductReviewView(APIView):
         data_serializer = ProductSerializer(queryset,
                                             many = True,
                                             )
-        print(data_serializer.data)
-        
 
         return HttpResponse(status = 200)
 
@@ -89,8 +93,8 @@ class CategoriesView(APIView):
         serialized_data = CategoriesSerializer(queryset,
                                                many = True,
                                                )
-        # data = categories_crutch(serialized_data.data) ?
-        return JsonResponse(data = serialized_data.data,
+        data = categories_crutch(serialized_data.data)
+        return JsonResponse(data = data,
                             safe = False,
                             )
 
@@ -142,9 +146,6 @@ class SalesProductView(APIView):
         data_serializer = SalesSerializer(queryset,
                                           many = True,
                                           )
-        # 'Need a photo to be visible on page!'
-        # data = sales_crutch(data_serializer.data)
-
         return JsonResponse(data = {'items':data_serializer.data})
 
 
@@ -273,7 +274,6 @@ class UserOrderView(APIView):
                                           many = True,
                                           )
         data = userorderview(data_serializer.data[0])
-        # print(data_serializer.data[0])
         return JsonResponse(data = data)
 
     def post(self, request, id):
@@ -288,12 +288,18 @@ class UserOrderView(APIView):
                         deliveryType = request.data['deliveryType'],
                         paymentType = request.data['paymentType'],
                         )
-        return HttpResponse(status = 200)
+        data_serialzier = OrderSerializer(queryset,
+                                          many = True,
+                                          )
+        
+        data = {'orderId': data_serialzier.data[0]['id']}
+        return JsonResponse(data = data)
 
 
 class PaymentView(APIView):
     permission_classes = [IsAuthenticated]
 
     def get(self, request, id):
-        print('Its paymetnview, GET request')
+        print('Допустим оплата прошла ¯\_(ツ)_/¯ ')
+        print(request.data, id)
         return HttpResponse(status = 200)
