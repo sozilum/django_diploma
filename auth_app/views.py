@@ -67,6 +67,7 @@ class ProfileView(APIView):
     def get(self, request):
         user = Profile.objects.get(user_id = request.user.pk)
         profile_serializer = ProfileSerializer(user)
+        print(profile_serializer.data)
         return JsonResponse(profile_serializer.data)
     
 class UpdateProfileView(APIView):

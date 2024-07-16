@@ -22,7 +22,7 @@ urlpatterns = [
 
     path('categories/', CategoriesView.as_view(), name = 'categories'),
     path('catalog/', CatalogView.as_view(), name = 'catalog'),
-    path('sales/', SalesProductView.as_view(), name = 'sales'),
+    path('sales/', SalesProductView.as_view(), name = 'sales'),#TODO страница sale не отображается 
     path('banners/', BannerView.as_view(), name = 'banner'),
     path('tags/', TagsView.as_view(), name = 'tags'),
     path('basket/', BasketView.as_view(), name = 'basket'),

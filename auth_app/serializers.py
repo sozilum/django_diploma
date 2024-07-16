@@ -6,12 +6,17 @@ from .models import (Profile,
 
 
 class AvatarProfileSerializer(serializers.Serializer):
+    src = serializers.SerializerMethodField()
+
     class Meta:
         model = AvatarProfile
         fields = [
             'src',
             'alt',
         ]
+    
+    def get_src(self, obj):
+        return obj.src.url
 
 
 class ProfileSerializer(serializers.ModelSerializer):

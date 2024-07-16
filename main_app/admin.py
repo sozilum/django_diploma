@@ -2,11 +2,9 @@ from django.contrib import admin
 
 from .models import (Products,
                      Review,
-                     Payment,
                      Order,
                      Tags,
                      Categories,
-                     DeliveryType,
                      Productavatar,
                      Categoriesavatar,
                      Subcategoriesavatar,
@@ -70,7 +68,6 @@ class ProductAdmin(admin.ModelAdmin):
         'price',
         'producer',
         'date',
-        'tags',
         'category',
         'freeDelivery',
         'dateFrom',
@@ -91,17 +88,9 @@ class ReviewAdmin(admin.ModelAdmin):
     list_display = [
         'author',
         'email',
-        'points',
+        'rate',
         'text',
         'date',
-    ]
-
-
-@admin.register(Payment)
-class PaymetAdmin(admin.ModelAdmin):
-
-    list_display = [
-        'name',
     ]
 
 
@@ -138,14 +127,6 @@ class CategoriesAdmin(admin.ModelAdmin):
         'title',
         'image',
         'subcategories',
-    ]
-
-
-@admin.register(DeliveryType)
-class DeliveryTypeAdmin(admin.ModelAdmin):
-
-    list_display = [
-        'name',
     ]
 
 

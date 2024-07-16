@@ -1,10 +1,8 @@
 from rest_framework.views import APIView
 from rest_framework.permissions import IsAuthenticated, AllowAny
 
-from django.urls import (reverse_lazy)
 from django.http import (HttpResponse,
                          JsonResponse,
-                         HttpResponseRedirect,
                          )
 from .models import (Products,
                      Categories,
@@ -22,9 +20,7 @@ from .serializer import (CategoriesSerializer,
                          ReviewSerializer,
                          )
 
-from .crutch import (userorderview,
-                     categories_crutch,
-                     )
+from .crutch import (userorderview)
 
 import json
 
@@ -49,10 +45,6 @@ class ProductView(APIView):
         data_serializer = ProductSerializer(queryset,
                                             many = True,
                                             )
-        
-        url = data_serializer.data[0]['images'][0]['src']
-        data_serializer.data[0]['images'][0]['src'] = f'/home/verghil/Desktop/diploma{url}'
-        
         return JsonResponse(data = data_serializer.data[0])
 
 
@@ -71,16 +63,25 @@ class ProductReviewView(APIView):
 
     def post(self, request, id):
         queryset = Products.objects.filter(id = id)
-        
         for data in queryset:
             data.reviews.create(author = request.data['author'],
                                 email = request.data['email'],
                                 text = request.data['text'],
+                                rate = request.data['rate'],
                                 )
-        
-        data_serializer = ProductSerializer(queryset,
-                                            many = True,
-                                            )
+        num = 0
+        for data in queryset:
+            reviews_data = data.reviews.all()
+
+            serializer_data = ReviewSerializer(reviews_data,
+                                               many = True,
+                                               )
+            
+            for inner_data in serializer_data.data:
+                num += inner_data['rate']
+
+            num //= len(serializer_data.data)
+            queryset.update(rating = num)
 
         return HttpResponse(status = 200)
 
@@ -90,11 +91,11 @@ class CategoriesView(APIView):
 
     def get(self, request):
         queryset = Categories.objects.all()
-        serialized_data = CategoriesSerializer(queryset,
+        serializer_data = CategoriesSerializer(queryset,
                                                many = True,
                                                )
-        data = categories_crutch(serialized_data.data)
-        return JsonResponse(data = data,
+        #Не отображаются подкатегории
+        return JsonResponse(data = serializer_data.data,
                             safe = False,
                             )
 
@@ -106,10 +107,8 @@ class CatalogView(APIView):
         data_serializer = ProductSerializer(queryset,
                                             many = True,
                                             )
-        print('Its CatalogView GET request')
-        return JsonResponse(data = data_serializer.data,
-                            safe = False,
-                            )
+        data = {'items': data_serializer.data}
+        return JsonResponse(data = data)
 
 
 class PopularProductView(APIView):
@@ -136,7 +135,7 @@ class LimitedProductView(APIView):
         return JsonResponse(data = data_serializer.data,
                             safe=False,
                             )
-    
+
 
 class SalesProductView(APIView):
     permission_classes = [AllowAny]
@@ -146,8 +145,8 @@ class SalesProductView(APIView):
         data_serializer = SalesSerializer(queryset,
                                           many = True,
                                           )
-        return JsonResponse(data = {'items':data_serializer.data})
-
+        data = {'items':data_serializer.data}
+        return JsonResponse(data = data)
 
 
 class TagsView(APIView):
@@ -231,8 +230,6 @@ class OrderView(APIView):
         data_serializer = OrderSerializer(queryset,
                                           many = True,
                                           )
-        print(request.data, 'Its OrderView Get request')
-        
         return JsonResponse(data = data_serializer.data,
                             safe = False,
                             )
@@ -300,6 +297,11 @@ class PaymentView(APIView):
     permission_classes = [IsAuthenticated]
 
     def get(self, request, id):
-        print('Допустим оплата прошла ¯\_(ツ)_/¯ ')
-        print(request.data, id)
+        return HttpResponse(status = 200)
+    
+    def post(self, request, id):
+        basket_query = BasketItems.objects.filter(user_id = request.user.id,
+                                                  archived = False,
+                                                  )
+        basket_query.update(archived = True)
         return HttpResponse(status = 200)

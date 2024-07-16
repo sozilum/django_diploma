@@ -113,7 +113,7 @@ class Review(models.Model):
     class Meta:
         ordering = [
             'date',
-            'points',
+            'rate',
         ]
 
     author = models.CharField(blank = True,
@@ -123,26 +123,12 @@ class Review(models.Model):
     email = models.TextField(blank = True,
                              null = True,
                              )
-    points = models.PositiveSmallIntegerField(null = True)
+    rate = models.PositiveSmallIntegerField(null = True)
     text = models.TextField(null = True)
     date = models.DateTimeField(auto_now_add = True)
     
     def __str__(self) -> str:
         return self.email
-
-
-class Payment(models.Model):
-    name = models.CharField(max_length = 50)
-
-    def __str__(self) -> str:
-        return self.name
-
-
-class DeliveryType(models.Model):
-    name = models.CharField(max_length = 50)
-    
-    def __str__(self) -> str:
-        return self.name
 
 
 class Specifications(models.Model):
@@ -187,10 +173,7 @@ class Products(models.Model):
                                 null = True,
                                 )
     date = models.DateTimeField(auto_now_add = True)
-    tags = models.ForeignKey(Tags,
-                             on_delete = models.PROTECT,
-                             null = True,
-                             )
+    tags = models.ManyToManyField(Tags)
     category = models.ForeignKey(Categories,
                                    on_delete = models.PROTECT,
                                    null = True,
@@ -260,11 +243,10 @@ class Order(models.Model):
                              blank = True,
                              null = True,
                              )
-    paymentType = models.ForeignKey(Payment,
-                                    on_delete = models.PROTECT,
-                                    blank = True,
-                                    null = True,
-                                    )
+    paymentType = models.CharField(max_length = 50,
+                                   null = True,
+                                   blank = True,
+                                   )
     totalCost = models.PositiveSmallIntegerField(default = 0)
     city = models.TextField(max_length = 50,
                             default = None,
@@ -276,11 +258,10 @@ class Order(models.Model):
                                blank = True,
                                null = True,
                                )
-    deliveryType = models.ForeignKey(DeliveryType,
-                                     on_delete=models.PROTECT,
-                                     blank = True,
-                                     null = True,
-                                     )
+    deliveryType = models.CharField(max_length = 50,
+                                    null = True,
+                                    blank = True,
+                                    )
     createdAt = models.DateTimeField(auto_now_add = True)
     status = models.BooleanField(default = True)
 
