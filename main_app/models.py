@@ -99,11 +99,7 @@ class Categories(models.Model):
                               on_delete = models.PROTECT,
                               null = True,
                               )
-    subcategories = models.ForeignKey(Subcategories,
-                                      on_delete = models.PROTECT,
-                                      null = True,
-                                      blank = True,
-                                      )
+    subcategories = models.ManyToManyField(Subcategories)
 
     def __str__(self) -> str:
         return self.title
@@ -175,9 +171,10 @@ class Products(models.Model):
     date = models.DateTimeField(auto_now_add = True)
     tags = models.ManyToManyField(Tags)
     category = models.ForeignKey(Categories,
-                                   on_delete = models.PROTECT,
-                                   null = True,
-                                   )
+                                 on_delete = models.SET_NULL,
+                                 null = True,
+                                 blank = True,
+                                 )
     freeDelivery = models.BooleanField(default = False)
     dateFrom = models.DateField(null = True,
                                 default = None,

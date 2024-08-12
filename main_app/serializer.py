@@ -92,7 +92,7 @@ class SubcategoriesSerializer(serializers.ModelSerializer):
 
 
 class CategoriesSerializer(serializers.ModelSerializer):
-    subcategories = SubcategoriesSerializer()
+    subcategories = SubcategoriesSerializer(many = True)
     image = CategoriesavatarSerializer()
     title = serializers.SerializerMethodField()
     

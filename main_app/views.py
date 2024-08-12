@@ -94,7 +94,6 @@ class CategoriesView(APIView):
         serializer_data = CategoriesSerializer(queryset,
                                                many = True,
                                                )
-        #Не отображаются подкатегории
         return JsonResponse(data = serializer_data.data,
                             safe = False,
                             )

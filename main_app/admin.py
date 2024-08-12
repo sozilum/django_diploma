@@ -96,8 +96,7 @@ class ReviewAdmin(admin.ModelAdmin):
 
 @admin.register(Order)
 class OrderAdmin(admin.ModelAdmin):
-    #TODO посмотреть как можно сделать так, что-бы было видно название продукта, а не имя пользователя
-    
+   
     list_display = [
         'fullName', 
         'email',
@@ -126,7 +125,6 @@ class CategoriesAdmin(admin.ModelAdmin):
     list_display = [
         'title',
         'image',
-        'subcategories',
     ]
 
 
