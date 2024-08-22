@@ -137,7 +137,7 @@ class ProductSerializer(serializers.ModelSerializer):
 
 
 class SalesSerializer(serializers.ModelSerializer):
-    images = ProductavatarSerializer()
+    images = ProductavatarSerializer(many = True)
 
     class Meta:
         model = Products
