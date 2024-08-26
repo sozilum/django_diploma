@@ -12,11 +12,14 @@ from .models import (Products,
                      BasketItems,
                      )
 
+
 class ProductImageInline(admin.TabularInline):
     model = Products.images.through
 
+
 class ProductInline(admin.TabularInline):
     model = Products
+
 
 @admin.register(Subcategories)
 class SubcategoriesAdmin(admin.ModelAdmin):
@@ -60,7 +63,7 @@ class ProductAdmin(admin.ModelAdmin):
     inlines = [
         ProductImageInline,
     ]
-    
+
     list_display = [
         'title',
         'description',
@@ -96,9 +99,9 @@ class ReviewAdmin(admin.ModelAdmin):
 
 @admin.register(Order)
 class OrderAdmin(admin.ModelAdmin):
-   
+
     list_display = [
-        'fullName', 
+        'fullName',
         'email',
         'paymentType',
         'phone',
@@ -109,7 +112,6 @@ class OrderAdmin(admin.ModelAdmin):
         'status',
     ]
 
-    
 
 @admin.register(Tags)
 class TagsAdmin(admin.ModelAdmin):

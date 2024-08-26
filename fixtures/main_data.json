@@ -1,0 +1,289 @@
+[
+    {
+        "model": "main_app.subcategoriesavatar",
+        "pk": 3,
+        "fields": {
+            "src": "subcategories/old_phone_logo.jpg",
+            "alt": "old_phone"
+        }
+    },
+    {
+        "model": "main_app.subcategoriesavatar",
+        "pk": 4,
+        "fields": {
+            "src": "subcategories/fullFormatHeadphones.png",
+            "alt": "fullFormatHeadPhones"
+        }
+    },
+    {
+        "model": "main_app.subcategoriesavatar",
+        "pk": 5,
+        "fields": {
+            "src": "subcategories/bluetooth_headphones.jpg",
+            "alt": "bluetooth headphones"
+        }
+    },
+    {
+        "model": "main_app.categoriesavatar",
+        "pk": 3,
+        "fields": {
+            "src": "categories/phone_logo.jpeg",
+            "alt": "phon_logo"
+        }
+    },
+    {
+        "model": "main_app.categoriesavatar",
+        "pk": 4,
+        "fields": {
+            "src": "categories/headphones_logo.jpeg",
+            "alt": "headphones_logo"
+        }
+    },
+    {
+        "model": "main_app.productavatar",
+        "pk": 3,
+        "fields": {
+            "src": "products/nokia_3310.jpg",
+            "alt": "nokia_3310"
+        }
+    },
+    {
+        "model": "main_app.productavatar",
+        "pk": 4,
+        "fields": {
+            "src": "products/fullFormat_headPhones.jpeg",
+            "alt": "HeadPhones"
+        }
+    },
+    {
+        "model": "main_app.subcategories",
+        "pk": 5,
+        "fields": {
+            "title": "full format",
+            "image": 4
+        }
+    },
+    {
+        "model": "main_app.subcategories",
+        "pk": 6,
+        "fields": {
+            "title": "Phone",
+            "image": 3
+        }
+    },
+    {
+        "model": "main_app.subcategories",
+        "pk": 7,
+        "fields": {
+            "title": "bluetooth headphones",
+            "image": 5
+        }
+    },
+    {
+        "model": "main_app.categories",
+        "pk": 5,
+        "fields": {
+            "title": "Phone",
+            "image": 3,
+            "subcategories": [
+                6
+            ]
+        }
+    },
+    {
+        "model": "main_app.categories",
+        "pk": 6,
+        "fields": {
+            "title": "HeadPhones",
+            "image": 4,
+            "subcategories": [
+                5,
+                7
+            ]
+        }
+    },
+    {
+        "model": "main_app.review",
+        "pk": 4,
+        "fields": {
+            "author": "some name",
+            "email": "some@email.com",
+            "rate": null,
+            "text": "some review",
+            "date": "2024-07-14T21:11:06.285Z"
+        }
+    },
+    {
+        "model": "main_app.review",
+        "pk": 5,
+        "fields": {
+            "author": "another name",
+            "email": "another@mail.com",
+            "rate": null,
+            "text": "another text",
+            "date": "2024-07-14T21:13:04.512Z"
+        }
+    },
+    {
+        "model": "main_app.review",
+        "pk": 6,
+        "fields": {
+            "author": "some name",
+            "email": "some@email.com",
+            "rate": 5,
+            "text": "Some another review",
+            "date": "2024-07-14T21:14:12.509Z"
+        }
+    },
+    {
+        "model": "main_app.review",
+        "pk": 7,
+        "fields": {
+            "author": "another name",
+            "email": "some_emails@mail.ru",
+            "rate": 4,
+            "text": "another review",
+            "date": "2024-07-16T16:17:17.967Z"
+        }
+    },
+    {
+        "model": "main_app.review",
+        "pk": 8,
+        "fields": {
+            "author": "someof",
+            "email": "some_email@mail.ru",
+            "rate": 3,
+            "text": "some of review",
+            "date": "2024-07-16T16:17:57.558Z"
+        }
+    },
+    {
+        "model": "main_app.review",
+        "pk": 9,
+        "fields": {
+            "author": "fosome",
+            "email": "another@mail.com",
+            "rate": 3,
+            "text": "ofsome",
+            "date": "2024-07-16T16:22:26.287Z"
+        }
+    },
+    {
+        "model": "main_app.tags",
+        "pk": 1,
+        "fields": {
+            "name": "legendary"
+        }
+    },
+    {
+        "model": "main_app.tags",
+        "pk": 2,
+        "fields": {
+            "name": "Headphones"
+        }
+    },
+    {
+        "model": "main_app.products",
+        "pk": 5,
+        "fields": {
+            "title": "Nokia 3310",
+            "description": "Some descriptions",
+            "fullDescription": "Some full descriptions",
+            "price": "1000.00",
+            "salePrice": "899.00",
+            "producer": "Nokia",
+            "date": "2024-07-04T19:07:27.175Z",
+            "category": null,
+            "freeDelivery": true,
+            "dateFrom": "2024-06-03",
+            "dateTo": "2024-10-10",
+            "count": 300,
+            "available": true,
+            "specifications": null,
+            "rating": null,
+            "images": [
+                3
+            ],
+            "tags": [
+                1
+            ],
+            "reviews": [
+                4,
+                5
+            ]
+        }
+    },
+    {
+        "model": "main_app.products",
+        "pk": 6,
+        "fields": {
+            "title": "HeadPhones",
+            "description": "Description some red headphones",
+            "fullDescription": "Some full description of red headphones",
+            "price": "300.00",
+            "salePrice": "199.00",
+            "producer": "Sennheiser",
+            "date": "2024-07-04T19:08:35.306Z",
+            "category": null,
+            "freeDelivery": false,
+            "dateFrom": "2024-05-06",
+            "dateTo": "2024-09-12",
+            "count": 200,
+            "available": true,
+            "specifications": null,
+            "rating": 3,
+            "images": [
+                4
+            ],
+            "tags": [
+                2
+            ],
+            "reviews": [
+                6,
+                7,
+                8,
+                9
+            ]
+        }
+    },
+    {
+        "model": "main_app.basketitems",
+        "pk": 4,
+        "fields": {
+            "user": 1,
+            "products": 5,
+            "count": 3,
+            "archived": true
+        }
+    },
+    {
+        "model": "main_app.basketitems",
+        "pk": 5,
+        "fields": {
+            "user": 1,
+            "products": 6,
+            "count": 2,
+            "archived": true
+        }
+    },
+    {
+        "model": "main_app.order",
+        "pk": 6,
+        "fields": {
+            "fullName": 1,
+            "email": "some",
+            "phone": "some",
+            "paymentType": "someone",
+            "totalCost": 3600,
+            "city": "some",
+            "address": "some",
+            "deliveryType": "ordinary",
+            "createdAt": "2024-07-04T19:35:56.225Z",
+            "status": true,
+            "baskets": [
+                4,
+                5
+            ]
+        }
+    }
+]

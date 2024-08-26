@@ -14,7 +14,7 @@ class AvatarProfileSerializer(serializers.Serializer):
             'src',
             'alt',
         ]
-    
+
     def get_src(self, obj):
         return obj.src.url
 

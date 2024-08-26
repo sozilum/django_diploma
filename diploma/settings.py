@@ -11,9 +11,11 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 """
 
 from pathlib import Path
+from os import getenv
+from dotenv import load_dotenv
 import os
 
-
+load_dotenv()
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -22,12 +24,12 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-7ym20*$98z$^d33s!z!r1%87)u_lvll7pb2$_0!vqyxd*wy*+h'
+SECRET_KEY = getenv('DJANGO_SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = getenv('DJANGO_DEBUG')
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [getenv('DJANGO_ALLOWED_HOSTS')]
 
 MEDIA_ROOT = os.path.join(BASE_DIR, '')
 MEADIA_URL = ''
@@ -45,7 +47,7 @@ INSTALLED_APPS = [
 
     'frontend',
     'rest_framework',
-    
+
     'main_app.apps.MainAppConfig',
     'auth_app.apps.AuthAppConfig',
 ]
@@ -137,5 +139,3 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
-
-

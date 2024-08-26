@@ -1,15 +1,15 @@
 from rest_framework import serializers
 from .models import (Products,
-                    Order,
-                    Review,
-                    Tags,
-                    Categories,
-                    Subcategories,
-                    Productavatar,
-                    Categoriesavatar,
-                    Subcategoriesavatar,
-                    BasketItems
-                    )
+                     Order,
+                     Review,
+                     Tags,
+                     Categories,
+                     Subcategories,
+                     Productavatar,
+                     Categoriesavatar,
+                     Subcategoriesavatar,
+                     BasketItems
+                     )
 
 
 class ReviewSerializer(serializers.ModelSerializer):
@@ -37,6 +37,7 @@ class SubcategoriesavatarSerializer(serializers.ModelSerializer):
     def get_src(self, obj):
         return obj.src.url
 
+
 class CategoriesavatarSerializer(serializers.ModelSerializer):
     src = serializers.SerializerMethodField()
 
@@ -49,6 +50,7 @@ class CategoriesavatarSerializer(serializers.ModelSerializer):
 
     def get_src(self, obj):
         return obj.src.url
+
 
 class ProductavatarSerializer(serializers.ModelSerializer):
     src = serializers.SerializerMethodField()
@@ -63,9 +65,10 @@ class ProductavatarSerializer(serializers.ModelSerializer):
     def get_src(self, obj):
         return obj.src.url
 
+
 class TagsSerializer(serializers.ModelSerializer):
     name = serializers.SerializerMethodField()
-    
+
     class Meta:
         model = Tags
         fields = [
@@ -74,6 +77,7 @@ class TagsSerializer(serializers.ModelSerializer):
 
     def get_name(self, obj):
         return obj.name
+
 
 class SubcategoriesSerializer(serializers.ModelSerializer):
     image = SubcategoriesavatarSerializer()
@@ -86,16 +90,16 @@ class SubcategoriesSerializer(serializers.ModelSerializer):
             'title',
             'image',
         ]
-        
+
     def get_title(self, obj):
         return obj.title
 
 
 class CategoriesSerializer(serializers.ModelSerializer):
-    subcategories = SubcategoriesSerializer(many = True)
+    subcategories = SubcategoriesSerializer(many=True)
     image = CategoriesavatarSerializer()
     title = serializers.SerializerMethodField()
-    
+
     class Meta:
         model = Categories
         fields = [
@@ -104,17 +108,17 @@ class CategoriesSerializer(serializers.ModelSerializer):
             'image',
             'subcategories',
         ]
-    
+
     def get_title(self, obj):
         return obj.title
 
 
 class ProductSerializer(serializers.ModelSerializer):
-    images = ProductavatarSerializer(many = True)
-    reviews = ReviewSerializer(many = True)
-    tags = TagsSerializer(many = True)
+    images = ProductavatarSerializer(many=True)
+    reviews = ReviewSerializer(many=True)
+    tags = TagsSerializer(many=True)
     category = CategoriesSerializer()
-    
+
     class Meta:
         model = Products
         fields = [
@@ -137,7 +141,7 @@ class ProductSerializer(serializers.ModelSerializer):
 
 
 class SalesSerializer(serializers.ModelSerializer):
-    images = ProductavatarSerializer(many = True)
+    images = ProductavatarSerializer(many=True)
 
     class Meta:
         model = Products
@@ -151,9 +155,10 @@ class SalesSerializer(serializers.ModelSerializer):
             'images',
         ]
 
+
 class BasketItemSerializer(serializers.ModelSerializer):
     products = ProductSerializer()
-    
+
     class Meta:
         model = BasketItems
         fields = [
@@ -161,8 +166,9 @@ class BasketItemSerializer(serializers.ModelSerializer):
             'count',
         ]
 
+
 class OrderSerializer(serializers.ModelSerializer):
-    baskets = BasketItemSerializer(many = True)
+    baskets = BasketItemSerializer(many=True)
     fullName = serializers.SerializerMethodField()
 
     class Meta:
