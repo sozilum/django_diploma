@@ -1,17 +1,69 @@
-Проект представляет собой интернет-магазин
 
-Как поднять проект:
 
-1. pip install poetry - Установить poetry
-2. poetry shell - Запустить poetry
-3. poetry install - Установить зависимости из poetry
-4. sudo apt install git - Установить git
-5. git init - Инициализировать git
-6. git clone - Скопировать проект
-7. cd diploma - Перейти в проект
-8. python manage.py loaddata fixtures/main_data.json - Загрузить фикстуры
-9. python manage.py migrate - Запустить миграцию django
-10. pip install diploma-frontend-0.6_corrected.tar.gz - Установить frontend
-11. nano -> ctrl+r -> .env -> Ввести данные - Отредактировать .env файл 
-12. python manage.py createsuperuser - Создать супер пользователя
-13. python manage.py runserver - Запустить
+### Интернет-магазин
+
+Тут текст с описанием
+
+## Как поднять проект
+
+### 1. Установка зависимостей
+
+1. Установите [Poetry](https://python-poetry.org/):
+   ```bash
+   pip install poetry
+   ```
+2. Запустите виртуальную среду Poetry:
+   ```bash
+   poetry shell
+   ```
+3. Установите все необходимые зависимости:
+   ```bash
+   poetry install
+   ```
+
+### 2. Подготовка репозитория
+
+1. Установите Git, если он ещё не установлен:
+   ```bash
+   sudo apt install git
+   ```
+2. Инициализируйте репозиторий Git:
+   ```bash
+   git init
+   ```
+3. Клонируйте проект:
+   ```bash
+   git clone <URL_Вашего_Репозитория>
+   ```
+4. Перейдите в директорию проекта:
+   ```bash
+   cd diploma
+   ```
+
+### 3. Настройка данных и базы
+
+1. Загрузите начальные данные:
+   ```bash
+   python manage.py loaddata fixtures/main_data.json
+   ```
+2. Примените миграции Django:
+   ```bash
+   python manage.py migrate
+   ```
+
+### 4. Установка и настройка фронтенда
+
+#### Установите фронтенд:
+    ```bash
+    pip install diploma-frontend-0.6_corrected.tar.gz
+    ```
+
+### 5. Запуск проекта
+
+#### Запустите сервер:
+    ```bash
+    python manage.py runserver
+    ```
+
+Теперь ваш проект запущен и доступен по адресу `http://127.0.0.1:8000/`. 
+
